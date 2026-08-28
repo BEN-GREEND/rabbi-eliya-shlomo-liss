@@ -296,8 +296,12 @@ export function validateContent(): ValidationResult {
       for (const { value } of readRefField(item.data, rule.field)) referencedPeople.add(value)
     }
   }
+  // A person who declares a tie to someone else is connected to the network,
+  // even if no exhibit names them yet.
   for (const item of items.filter((i) => i.collection === 'people')) {
-    if (!referencedPeople.has(item.data.id as string)) {
+    const declaresTie =
+      ((item.data.relations as unknown[] | undefined) ?? []).length > 0
+    if (!declaresTie && !referencedPeople.has(item.data.id as string)) {
       problems.push({
         severity: 'warning',
         filePath: item.filePath,

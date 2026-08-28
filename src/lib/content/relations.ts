@@ -6,7 +6,7 @@
  * a person file never lists its photographs. Write
  * `people: ["person-x"]` on the photograph, and the person page finds it.
  */
-import { personRulesFor, readRefField, rulesFor } from './references'
+import { INVERSE_RELATION, personRulesFor, readRefField, rulesFor } from './references'
 import type { Collection, RawItem } from './types'
 
 export interface PersonLink {
@@ -15,6 +15,14 @@ export interface PersonLink {
   collection: Collection
   /** Semantic role from the reference table: author, depicted, narrator… */
   role: string
+}
+
+export interface InverseRelation {
+  /** The person who declared the tie. */
+  person: string
+  /** This subject's role as seen from that person — the inverse of what they wrote. */
+  type: string
+  note?: string
 }
 
 export interface ContentIndex {
@@ -28,6 +36,8 @@ export interface ContentIndex {
   byPeriod: Map<string, string[]>
   byPlace: Map<string, string[]>
   byTag: Map<string, string[]>
+  /** person id → ties other people declared towards them. */
+  inverseRelations: Map<string, InverseRelation[]>
 }
 
 function push<K, V>(map: Map<K, V[]>, key: K, value: V): void {
@@ -44,6 +54,7 @@ export function buildIndex(items: RawItem[]): ContentIndex {
   const byPeriod = new Map<string, string[]>()
   const byPlace = new Map<string, string[]>()
   const byTag = new Map<string, string[]>()
+  const inverseRelations = new Map<string, InverseRelation[]>()
 
   for (const item of items) {
     byId.set(item.data.id as string, item)
@@ -69,6 +80,17 @@ export function buildIndex(items: RawItem[]): ContentIndex {
       relatedGraph.get(value)!.add(id)
     }
 
+    // person-to-person ties, read from the far end
+    if (item.collection === 'people') {
+      const declared =
+        (item.data.relations as Array<{ person: string; type: string; note?: string }>) ?? []
+      for (const rel of declared) {
+        const inverse = INVERSE_RELATION[rel.type]
+        if (!inverse || rel.person === id) continue
+        push(inverseRelations, rel.person, { person: id, type: inverse, note: rel.note })
+      }
+    }
+
     // taxonomies
     for (const rule of rulesFor(item.collection)) {
       if (rule.target.kind !== 'vocab') continue
@@ -90,5 +112,15 @@ export function buildIndex(items: RawItem[]): ContentIndex {
     for (const [key, list] of map) map.set(key, [...new Set(list)])
   }
 
-  return { items, byId, byCollection, personToItems, relatedGraph, byPeriod, byPlace, byTag }
+  return {
+    items,
+    byId,
+    byCollection,
+    personToItems,
+    relatedGraph,
+    byPeriod,
+    byPlace,
+    byTag,
+    inverseRelations,
+  }
 }

@@ -124,6 +124,7 @@ export function ExhibitPage({ collection, slug }: { collection: Collection; slug
           confidence={d.confidence as string | undefined}
           researchNote={d.researchNote as string | undefined}
           researchNeeded={d.researchNeeded as boolean | undefined}
+          canonical={d.canonical as boolean | undefined}
         />
 
         <RelatedItems id={item.id} />

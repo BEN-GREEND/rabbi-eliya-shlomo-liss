@@ -116,6 +116,41 @@ export function personRulesFor(collection: Collection): ReferenceRule[] {
   )
 }
 
+/**
+ * Convention: a relation's `type` names the OTHER person's role relative to
+ * the subject. On Binyamin's record, `{person: rabbi, type: father}` reads
+ * "the Rabbi is his father".
+ *
+ * The inverse lets a tie be declared once and read from both ends: the
+ * students each name the Rabbi as their teacher, and his page lists them
+ * without anyone maintaining a list of twelve names by hand.
+ *
+ * Where the inverse is genuinely ambiguous — a father's child may be a son or
+ * a daughter — the neutral term is used rather than a guess.
+ */
+export const INVERSE_RELATION: Record<string, string> = {
+  father: 'child',
+  mother: 'child',
+  son: 'parent',
+  daughter: 'parent',
+  brother: 'sibling',
+  sister: 'sibling',
+  sibling: 'sibling',
+  child: 'parent',
+  parent: 'child',
+  spouse: 'spouse',
+  wife: 'husband',
+  husband: 'wife',
+  'son-in-law': 'father-in-law',
+  'father-in-law': 'son-in-law',
+  'brother-in-law': 'brother-in-law',
+  'sister-in-law': 'sister-in-law',
+  teacher: 'student',
+  student: 'teacher',
+  colleague: 'colleague',
+  professional: 'professional',
+}
+
 /** Hebrew labels for the kinds of tie between two people. */
 export const RELATION_LABELS: Record<string, string> = {
   father: 'אביו',
@@ -125,6 +160,8 @@ export const RELATION_LABELS: Record<string, string> = {
   brother: 'אחיו',
   sister: 'אחותו',
   spouse: 'בן/בת זוגו',
+  wife: 'רעייתו',
+  husband: 'בעלה',
   'son-in-law': 'חתנו',
   'father-in-law': 'חותנו',
   'brother-in-law': 'גיסו',
@@ -133,6 +170,9 @@ export const RELATION_LABELS: Record<string, string> = {
   student: 'תלמידו',
   colleague: 'עמיתו',
   professional: 'קשר מקצועי',
+  child: 'בנו/בתו',
+  parent: 'הורהו',
+  sibling: 'אחיו/אחותו',
 }
 
 /** Hebrew labels for the roles above, used as headings on a person page. */

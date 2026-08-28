@@ -1,16 +1,134 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
+import { getById, getInverseRelations, type Item } from '@/lib/content'
+import { RELATION_LABELS } from '@/lib/content/references'
+import { lifeSpan } from '@/lib/utils/format'
 import { Container } from '@/components/primitives/Container'
+import { Numerals } from '@/components/primitives/Numerals'
 import { PlaceholderNotice } from '@/components/primitives/PlaceholderNotice'
 
 export const metadata: Metadata = { title: 'משפחתו והמשך דרכו' }
 
-/** Stage 4. No family names or relations are entered — none have been supplied. */
-export default function FamilyPage() {
+const SUBJECT = 'rabbi-eliya-shlomo-liss'
+
+/** Which ties belong to which part of the page. */
+const HOUSE_OF_HIS_FATHER = new Set(['father', 'mother', 'brother', 'sister', 'sibling', 'parent'])
+const HIS_OWN_FAMILY = new Set([
+  'spouse',
+  'wife',
+  'husband',
+  'brother-in-law',
+  'sister-in-law',
+  'father-in-law',
+])
+const NEXT_GENERATION = new Set(['son', 'daughter', 'child', 'son-in-law'])
+
+interface Tie {
+  person: Item
+  type: string
+  note?: string
+}
+
+function PersonEntry({ tie }: { tie: Tie }) {
+  const d = tie.person.data as Record<string, unknown>
+  const name = (d.displayName as string) || (d.name as string) || tie.person.title
+  const years = lifeSpan(d)
+
   return (
-    <Container width="default" className="py-20 lg:py-28">
-      <p className="label-caps text-brass">עמוד</p>
-      <h1 className="font-display mt-3 text-4xl sm:text-5xl">משפחתו והמשך דרכו</h1>
-      <PlaceholderNotice className="mt-10">העמוד ייבנה בשלב 4</PlaceholderNotice>
+    <li className="border-rule border-s ps-5">
+      <p className="label-caps text-brass">{RELATION_LABELS[tie.type] ?? tie.type}</p>
+      <Link
+        href={tie.person.url}
+        className="font-display hover:text-brass mt-1 block text-2xl leading-snug no-underline transition-colors"
+      >
+        {name}
+      </Link>
+      {typeof d.maidenName === 'string' && d.maidenName && (
+        <p className="label-caps text-ink-faint mt-1">לבית {d.maidenName}</p>
+      )}
+      {years && (
+        <p className="label-caps text-ink-faint mt-1">
+          <Numerals>{years}</Numerals>
+        </p>
+      )}
+      {typeof d.shortBio === 'string' && d.shortBio && (
+        <p className="text-ink-soft mt-2 text-[0.95rem] leading-relaxed">{d.shortBio}</p>
+      )}
+      {tie.note && <p className="text-ink-soft mt-1 text-[0.95rem]">{tie.note}</p>}
+    </li>
+  )
+}
+
+function Section({ title, ties, emptyNote }: { title: string; ties: Tie[]; emptyNote: string }) {
+  return (
+    <section className="border-rule border-t py-14 lg:py-20">
+      <h2 className="font-display text-3xl sm:text-4xl">{title}</h2>
+      {ties.length === 0 ? (
+        <PlaceholderNotice className="mt-8">{emptyNote}</PlaceholderNotice>
+      ) : (
+        <ul className="mt-10 grid gap-x-12 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+          {ties.map((tie) => (
+            <PersonEntry key={`${tie.person.id}-${tie.type}`} tie={tie} />
+          ))}
+        </ul>
+      )}
+    </section>
+  )
+}
+
+/**
+ * משפחתו והמשך דרכו.
+ *
+ * Built entirely from the relation graph — ties read once from the Rabbi's own
+ * record and once from everyone who named him. Nothing here is a separate list
+ * to maintain, and no name appears that is not a real record elsewhere.
+ *
+ * Deliberately restrained: names, ties, years. A family section in a heritage
+ * archive, not a profile of living people.
+ */
+export default function FamilyPage() {
+  const subject = getById(SUBJECT)
+  if (!subject) return null
+
+  const declared =
+    (subject.data.relations as Array<{ person: string; type: string; note?: string }>) ?? []
+  const declaredIds = new Set(declared.map((r) => r.person))
+  const all = [
+    ...declared,
+    ...getInverseRelations(SUBJECT).filter((r) => !declaredIds.has(r.person)),
+  ]
+
+  const ties: Tie[] = all.flatMap((r) => {
+    const person = getById(r.person)
+    return person ? [{ person, type: r.type, note: r.note }] : []
+  })
+
+  const pick = (set: Set<string>) => ties.filter((t) => set.has(t.type))
+
+  return (
+    <Container width="wide" className="pt-20 pb-20 lg:pt-28">
+      <header className="mb-14">
+        <p className="label-caps text-brass">עמוד</p>
+        <h1 className="font-display mt-3 text-4xl sm:text-5xl">משפחתו והמשך דרכו</h1>
+      </header>
+
+      <Section
+        title="בית אביו ומשפחת מוצאו"
+        ties={pick(HOUSE_OF_HIS_FATHER)}
+        emptyNote="טרם נמסרו פרטים נוספים על בית אביו"
+      />
+
+      <Section title="משפחתו" ties={pick(HIS_OWN_FAMILY)} emptyNote="טרם נמסרו פרטים" />
+
+      <Section
+        title="דור ההמשך"
+        ties={pick(NEXT_GENERATION)}
+        emptyNote="טרם נמסרו פרטים על דור ההמשך"
+      />
+
+      <p className="label-caps border-rule text-ink-faint border-t pt-10">
+        פרטי המשפחה מבוססים על החומר שנמסר על ידי המשפחה. שמות שלא נמסרו אינם מופיעים כאן.
+      </p>
     </Container>
   )
 }

@@ -55,6 +55,12 @@ const provenance = {
   sources: z.array(zSourceRef).default([]),
   confidence: z.enum(confidenceLevels).optional(),
   /**
+   * Settled by an authoritative source — in practice the family's own
+   * document. A canonical claim is not shown as provisional, and it overrides
+   * any secondary source that says otherwise.
+   */
+  canonical: z.boolean().default(false),
+  /**
    * An unresolved question, a conflict between sources, or a claim awaiting a
    * primary source. Contradictions are recorded here, never quietly resolved.
    */
@@ -102,6 +108,8 @@ export const personRelationTypes = [
   'brother',
   'sister',
   'spouse',
+  'wife',
+  'husband',
   'son-in-law',
   'father-in-law',
   'brother-in-law',
@@ -154,6 +162,7 @@ export const schemas = {
     ...base,
     name: z.string().min(1),
     displayName: z.string().optional(),
+    maidenName: z.string().optional(),
     honorific: z.string().optional(),
     ...dating,
     birthDate: z.iso.date().optional(),
@@ -255,7 +264,7 @@ export const schemas = {
     ]),
     description: z.string().optional(),
     /** Whether the document itself is in hand, merely located, or still sought. */
-    acquisitionStatus: z.enum(['obtained', 'located', 'sought']).default('obtained'),
+    acquisitionStatus: z.enum(['obtained', 'located', 'sought', 'lost']).default('obtained'),
     /** Person ids. Empty when unknown — never guessed. */
     author: zId.optional(),
     recipient: zId.optional(),

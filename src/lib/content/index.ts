@@ -8,11 +8,16 @@
  */
 import 'server-only'
 
-import { buildIndex, type ContentIndex, type PersonLink } from './relations'
+import {
+  buildIndex,
+  type ContentIndex,
+  type InverseRelation,
+  type PersonLink,
+} from './relations'
 import { COLLECTION_ROUTES, type Collection, type RawItem } from './types'
 import { validateContent } from './validate/validate'
 
-export type { PersonLink } from './relations'
+export type { PersonLink, InverseRelation } from './relations'
 export * from './types'
 export { loadVocab, periodById, placeById, categoryById } from './vocab'
 export { ROLE_LABELS } from './references'
@@ -117,6 +122,15 @@ export function getPersonItems(personId: string): Array<Item & { role: string }>
     const raw = index.byId.get(link.itemId)
     return raw ? [{ ...toItem(raw), role: link.role }] : []
   })
+}
+
+/**
+ * Ties other people declared towards this person, already inverted.
+ * A student who names the Rabbi as teacher appears on the Rabbi's page as a
+ * student, without the Rabbi's file listing anyone.
+ */
+export function getInverseRelations(personId: string): InverseRelation[] {
+  return load().index.inverseRelations.get(personId) ?? []
 }
 
 /** Symmetric related items — declared in one direction, readable from both. */

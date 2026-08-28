@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { getById } from '@/lib/content'
-import { Rule } from '@/components/primitives/Rule'
 
 export interface SourceRef {
   source: string
@@ -31,96 +30,91 @@ const STATUS_LABELS: Record<string, string> = {
 }
 
 /**
- * "מניין אנחנו יודעים" — the provenance block.
+ * Provenance, kept quiet.
  *
- * This is what separates an archive from a blog. Every claim on the site can
- * be traced to the record it came from, how close that record stands to the
- * events, and how much weight it carries. A visitor who wants to check us
- * can; a future editor who wants to correct us knows where to look.
+ * A visitor reading the life of the Rabbi should not be made to walk through
+ * an apparatus of footnotes. The sources are always there and always one
+ * click away — a closed disclosure in small type at the foot of the item —
+ * but they do not compete with the exhibit itself.
+ *
+ * Internal research questions live inside the same disclosure. They matter to
+ * whoever continues the work; they are not what a visitor came for.
  */
 export function Provenance({
   sources = [],
   confidence,
   researchNote,
   researchNeeded,
+  canonical,
 }: {
   sources?: SourceRef[]
   confidence?: string
   researchNote?: string
   researchNeeded?: boolean
+  canonical?: boolean
 }) {
-  if (!sources.length && !researchNote && !researchNeeded) return null
+  if (!sources.length && !researchNote) return null
 
   return (
-    <section className="mt-16" aria-labelledby="provenance-heading">
-      <Rule />
-      <h2 id="provenance-heading" className="label-caps text-brass mt-6">
-        מניין אנחנו יודעים
-      </h2>
+    <details className="border-rule mt-16 border-t pt-5 [&[open]_.marker]:rotate-90">
+      <summary className="label-caps text-ink-faint hover:text-brass flex cursor-pointer list-none items-center gap-2 transition-colors [&::-webkit-details-marker]:hidden">
+        <span aria-hidden="true" className="marker inline-block transition-transform duration-200">
+          ‹
+        </span>
+        מקורות
+        {sources.length > 0 && <span className="numerals">({sources.length})</span>}
+      </summary>
 
-      {sources.length > 0 && (
-        <ul className="mt-5 space-y-4">
-          {sources.map((ref) => {
-            const item = getById(ref.source)
-            if (!item) return null
-            const d = item.data as Record<string, unknown>
-            const facts = [
-              SOURCE_TYPE_LABELS[d.sourceType as string],
-              d.author as string | undefined,
-              d.publication as string | undefined,
-              d.issue as string | undefined,
-              d.hebrewYear as string | undefined,
-              ref.locator ?? (d.pageRef as string | undefined),
-              STATUS_LABELS[d.status as string],
-            ].filter(Boolean)
+      <div className="mt-5 max-w-[42rem] text-[0.9rem]">
+        {sources.length > 0 && (
+          <ul className="space-y-3">
+            {sources.map((ref) => {
+              const item = getById(ref.source)
+              if (!item) return null
+              const sd = item.data as Record<string, unknown>
+              const facts = [
+                SOURCE_TYPE_LABELS[sd.sourceType as string],
+                sd.author as string | undefined,
+                sd.publication as string | undefined,
+                sd.issue as string | undefined,
+                sd.hebrewYear as string | undefined,
+                ref.locator ?? (sd.pageRef as string | undefined),
+                STATUS_LABELS[sd.status as string],
+              ].filter(Boolean)
 
-            return (
-              <li key={ref.source} className="border-rule border-s ps-4">
-                <Link
-                  href={item.url}
-                  className="font-display hover:text-brass text-[1.0625rem] no-underline transition-colors"
-                >
-                  {item.title}
-                </Link>
-                <p className="label-caps text-ink-faint mt-1">{facts.join(' · ')}</p>
-                {ref.note && <p className="text-ink-soft mt-1 text-[0.9rem]">{ref.note}</p>}
-              </li>
-            )
-          })}
-        </ul>
-      )}
+              return (
+                <li key={ref.source}>
+                  <Link
+                    href={item.url}
+                    className="text-ink no-underline underline-offset-4 hover:underline"
+                  >
+                    {item.title}
+                  </Link>
+                  <span className="label-caps text-ink-faint ms-2">{facts.join(' · ')}</span>
+                  {ref.note && <p className="text-ink-soft mt-0.5">{ref.note}</p>}
+                </li>
+              )
+            })}
+          </ul>
+        )}
 
-      {confidence && (
-        <p className="label-caps text-ink-faint mt-5">
-          רמת ודאות: <span className="text-ink-soft">{CONFIDENCE_LABELS[confidence]}</span>
+        <p className="label-caps text-ink-faint mt-4">
+          {canonical
+            ? 'פרט מוסמך — נקבע על פי המקור המשפחתי'
+            : confidence
+              ? CONFIDENCE_LABELS[confidence]
+              : null}
         </p>
-      )}
 
-      {(researchNote || researchNeeded) && (
-        <div className="border-brass-line/50 bg-paper-deep/50 mt-6 border-s-2 px-5 py-4">
-          <p className="label-caps text-brass">
-            {researchNeeded ? 'שאלה פתוחה במחקר' : 'הערת מחקר'}
-          </p>
-          {researchNote && (
-            <p className="text-ink-soft mt-2 max-w-[42rem] text-[0.95rem] leading-relaxed">
-              {researchNote}
+        {researchNote && (
+          <div className="border-rule text-ink-soft mt-4 border-s-2 ps-4">
+            <p className="label-caps text-ink-faint">
+              {researchNeeded ? 'עדיין במחקר' : 'הערת מקור'}
             </p>
-          )}
-        </div>
-      )}
-    </section>
-  )
-}
-
-/**
- * A compact marker for lists: enough to warn a reader that an item rests on a
- * secondary source, without the full apparatus.
- */
-export function ConfidenceMark({ confidence }: { confidence?: string }) {
-  if (!confidence || confidence === 'high') return null
-  return (
-    <span className="label-caps text-ink-faint" title={CONFIDENCE_LABELS[confidence]}>
-      {confidence === 'low' ? 'טעון אימות' : 'מקור משני'}
-    </span>
+            <p className="mt-1 leading-relaxed">{researchNote}</p>
+          </div>
+        )}
+      </div>
+    </details>
   )
 }

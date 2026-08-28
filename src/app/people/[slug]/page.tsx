@@ -10,6 +10,7 @@ import {
   getAll,
   getBySlug,
   getById,
+  getInverseRelations,
   getPersonItems,
   periodById,
   placeById,
@@ -76,7 +77,14 @@ export default async function PersonPage({ params }: { params: Promise<{ slug: s
   const places = ((d.places as string[]) ?? []).flatMap((p) => placeById(p)?.name ?? [])
   const periods = ((d.periods as string[]) ?? []).flatMap((p) => periodById(p)?.title ?? [])
   const roles = (d.roles as string[]) ?? []
-  const relations = (d.relations as Array<{ person: string; type: string; note?: string }>) ?? []
+  // Ties this record declares, plus ties other people declared towards it —
+  // each connection is authored once, on whichever side is natural.
+  const declared = (d.relations as Array<{ person: string; type: string; note?: string }>) ?? []
+  const declaredIds = new Set(declared.map((r) => r.person))
+  const relations = [
+    ...declared,
+    ...getInverseRelations(person.id).filter((r) => !declaredIds.has(r.person)),
+  ]
 
   // Everything in the archive that points at this person, grouped by collection.
   const linked = getPersonItems(person.id)
@@ -138,6 +146,7 @@ export default async function PersonPage({ params }: { params: Promise<{ slug: s
               <Fact label="תפקידים">{roles.length ? roles.join(' · ') : undefined}</Fact>
               <Fact label="מקומות">{places.length ? places.join(' · ') : undefined}</Fact>
               <Fact label="תקופות">{periods.length ? periods.join(' · ') : undefined}</Fact>
+              <Fact label="שם נעורים">{d.maidenName as string}</Fact>
               <Fact label="כינויים">
                 {((d.aliases as string[]) ?? []).join(' · ') || undefined}
               </Fact>
@@ -239,6 +248,7 @@ export default async function PersonPage({ params }: { params: Promise<{ slug: s
           confidence={d.confidence as string | undefined}
           researchNote={d.researchNote as string | undefined}
           researchNeeded={d.researchNeeded as boolean | undefined}
+          canonical={d.canonical as boolean | undefined}
         />
       </article>
     </Container>
