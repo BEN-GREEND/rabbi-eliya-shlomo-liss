@@ -24,7 +24,7 @@ export function YearMark({
       aria-hidden="true"
       className={cn(
         'numerals font-display pointer-events-none leading-none font-light select-none',
-        'text-brass/[0.09]',
+        'text-brass-line/[0.10]',
         sizes[size],
         className,
       )}

@@ -5,6 +5,8 @@
  * never shows a guess as though it were a fact.
  */
 export interface Datable {
+  /** Scaffolding item. Its structural values are not facts and never display. */
+  placeholder?: boolean
   date?: string
   approximateDate?: string
   year?: number
@@ -19,6 +21,9 @@ const heDate = new Intl.DateTimeFormat('he-IL', {
 })
 
 export function formatDate(d: Datable): string | null {
+  // A placeholder's year exists only to satisfy the schema. Showing it would
+  // present scaffolding as history.
+  if (d.placeholder) return null
   if (d.dateDisplay) return d.dateDisplay
   if (d.date) return heDate.format(new Date(d.date))
   if (d.approximateDate) return `בערך ${d.approximateDate}`
@@ -28,6 +33,7 @@ export function formatDate(d: Datable): string | null {
 
 /** The machine-readable value for <time datetime="…">, when we have one. */
 export function dateTimeAttr(d: Datable): string | undefined {
+  if (d.placeholder) return undefined
   if (d.date) return d.date
   if (typeof d.year === 'number') return String(d.year)
   return undefined

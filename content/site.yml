@@ -10,7 +10,17 @@ intro: ''
 description: 'אתר מורשת לזכרו של הרב אליהו שלמה ליס — ארכיון, תמונות, מסמכים, תורה ועדויות.'
 # כתובת האתר בפרודקשן. יש לעדכן לפני עלייה לאוויר.
 url: 'https://rabbi-eliya-shlomo-liss.example'
-locale: 'he_IL'
+locale: "he_IL"
+
+# דיוקן ה-Hero.
+# הקובץ טרם הועלה. כל עוד הוא אינו קיים, אזור התמונה בדף הבית מוצג
+# כלוח ריק עם התווית "תצוגה ממתינה" — לא נוצרת שום תמונת placeholder.
+# ברגע שהקובץ יעלה לנתיב הזה, הוא ייכנס לדף הבית אוטומטית.
+portrait: "/images/people/rabbi-eliya-shlomo-liss/portrait-main.jpg"
+# תיאור התמונה לקוראי מסך. חובה למלא כשהתמונה תעלה.
+portraitAlt: ""
+# מקור / צלם / באדיבות. טרם נמסר.
+portraitCredit: ""
 
 memorial:
   title: 'נר זכרון'

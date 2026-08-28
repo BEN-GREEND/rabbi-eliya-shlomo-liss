@@ -47,7 +47,7 @@ export function Footer() {
           </div>
         </div>
 
-        <p className="label-caps border-rule-deep text-paper/35 mt-16 border-t pt-8">
+        <p className="label-caps border-rule-deep text-paper/55 mt-16 border-t pt-8">
           אתר מורשת · כל הזכויות שמורות
         </p>
       </Container>

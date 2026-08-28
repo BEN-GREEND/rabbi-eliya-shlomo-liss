@@ -16,6 +16,10 @@ const zSite = z.object({
   description: z.string(),
   url: z.string(),
   locale: z.string().default('he_IL'),
+  /** Hero portrait. The file may not exist yet — components check before rendering. */
+  portrait: z.string().default(''),
+  portraitAlt: z.string().default(''),
+  portraitCredit: z.string().default(''),
   memorial: z
     .object({ title: z.string().default('נר זכרון'), text: z.string().default('') })
     .default({ title: 'נר זכרון', text: '' }),

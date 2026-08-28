@@ -57,7 +57,7 @@ export function ExhibitLabel({
       </h3>
 
       {facts.length > 0 && (
-        <p className={cn('label-caps mt-2.5', deep && 'text-paper/55')}>
+        <p className={cn('label-caps mt-2.5', deep && 'text-paper/70')}>
           {facts.map((fact, i) => (
             <span key={i}>
               {i > 0 && (
@@ -86,7 +86,7 @@ export function ExhibitLabel({
         <p
           className={cn(
             'label-caps mt-3 text-[0.625rem]',
-            deep ? 'text-paper/40' : 'text-ink-faint',
+            deep ? 'text-paper/60' : 'text-ink-faint',
           )}
         >
           מקור: {credit}

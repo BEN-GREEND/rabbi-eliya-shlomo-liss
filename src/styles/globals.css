@@ -57,14 +57,18 @@
   /* ink */
   --color-ink: #141922;
   --color-ink-soft: #4a5462;
-  --color-ink-faint: #8b93a0;
+  --color-ink-faint: #656d7c;
 
   /* deep sections */
   --color-deep: #101720;
   --color-deep-soft: #1b2531;
 
-  /* brass — dulled, never shiny */
-  --color-brass: #a8813f;
+  /* brass — dulled, never shiny.
+     `brass` is the text-safe tone: 4.68:1 on paper, so the 11px wall-label
+     caps pass AA. `brass-line` is the lighter tone, for hairlines and marks
+     only, where contrast rules do not apply. */
+  --color-brass: #8a6828;
+  --color-brass-line: #a8813f;
   --color-brass-soft: #c9a96a;
   --color-brass-faint: #e3d5b8;
 

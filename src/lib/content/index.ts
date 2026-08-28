@@ -75,6 +75,17 @@ function load() {
 
 // ---- reads -----------------------------------------------------------------
 
+/**
+ * Real, published content only — placeholders excluded.
+ *
+ * The home page is the front of the exhibition: it shows what actually
+ * exists. Scaffolding items stay visible inside their own collections, where
+ * they read as work in progress, but they never fill the shop window.
+ */
+export function getReal(collection: Collection): Item[] {
+  return getAll(collection).filter((item) => !item.data.placeholder)
+}
+
 export function getAll(collection: Collection): Item[] {
   return load()
     .items.filter((i) => i.collection === collection)
@@ -129,7 +140,7 @@ export function getByPeriod(periodId: string): Item[] {
 
 /** Deterministic pick — same item all day, so the page stays static. */
 export function getDailyItem(collection: Collection): Item | undefined {
-  const items = getAll(collection)
+  const items = getReal(collection)
   if (!items.length) return undefined
   const now = new Date()
   const dayOfYear = Math.floor(
