@@ -1,0 +1,58 @@
+# קטגוריות, מנוהלות בתוכן ולא בקוד.
+# הקטגוריות מוגדרות בנפרד לכל collection: קטגוריה של גלריה
+# אינה תקפה בארכיון, וה-validator אוכף זאת.
+#
+# הערכים כאן הם מתארים צורניים (סוג צילום, סוג מסמך) — לא קביעות
+# ביוגרפיות. קטגוריות תוכן אמיתיות יתווספו עם המידע.
+
+people:
+  - id: family
+    title: 'משפחה'
+  - id: rabbis
+    title: 'רבנים'
+  - id: students
+    title: 'תלמידים'
+  - id: colleagues
+    title: 'עמיתים'
+  - id: public
+    title: 'אישי ציבור'
+  - id: officials
+    title: 'בעלי תפקידים'
+
+gallery:
+  - id: portrait
+    title: 'דיוקן'
+  - id: group
+    title: 'צילום קבוצתי'
+  - id: event
+    title: 'אירוע'
+  - id: place
+    title: 'מקום'
+  - id: document-photo
+    title: 'מסמך מצולם'
+
+archive:
+  - id: correspondence
+    title: 'התכתבות'
+  - id: certificates
+    title: 'תעודות'
+  - id: publications
+    title: 'פרסומים'
+  - id: manuscripts
+    title: 'כתבי יד'
+
+timeline:
+  - id: unclassified
+    title: 'טרם סווג'
+
+torah:
+  - id: unclassified
+    title: 'טרם סווג'
+
+activities:
+  - id: unclassified
+    title: 'טרם סווג'
+
+testimonies:
+  - id: unclassified
+    title: 'טרם סווג'

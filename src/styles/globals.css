@@ -1,0 +1,219 @@
+@import 'tailwindcss';
+
+/* ==========================================================================
+   Self-hosted variable fonts. Hebrew subset first, no requests to Google.
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Frank Ruhl Libre';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('/fonts/frank-ruhl-libre-hebrew.woff2') format('woff2');
+  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+}
+@font-face {
+  font-family: 'Frank Ruhl Libre';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('/fonts/frank-ruhl-libre-latin.woff2') format('woff2');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Assistant';
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('/fonts/assistant-hebrew.woff2') format('woff2');
+  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+}
+@font-face {
+  font-family: 'Assistant';
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('/fonts/assistant-latin.woff2') format('woff2');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ==========================================================================
+   Design tokens — "נייר, דיו, פליז"
+
+   No pure white, no pure black, no saturated accent. The palette is a
+   lit gallery wall: ivory paper, soft blue-black ink, dulled brass.
+   ========================================================================== */
+
+@theme {
+  /* surfaces */
+  --color-paper: #f7f4ee;
+  --color-paper-deep: #efeae1;
+  --color-paper-edge: #e5dfd3;
+
+  /* ink */
+  --color-ink: #141922;
+  --color-ink-soft: #4a5462;
+  --color-ink-faint: #8b93a0;
+
+  /* deep sections */
+  --color-deep: #101720;
+  --color-deep-soft: #1b2531;
+
+  /* brass — dulled, never shiny */
+  --color-brass: #a8813f;
+  --color-brass-soft: #c9a96a;
+  --color-brass-faint: #e3d5b8;
+
+  /* hairlines */
+  --color-rule: #dcd5c8;
+  --color-rule-deep: #2b3542;
+
+  /* type */
+  --font-display: 'Frank Ruhl Libre', 'Times New Roman', serif;
+  --font-sans: 'Assistant', ui-sans-serif, system-ui, sans-serif;
+
+  /* the exhibit-label small caps treatment */
+  --tracking-label: 0.14em;
+  --tracking-wide-label: 0.24em;
+
+  /* radii — near-square. A museum label is not a pill. */
+  --radius-sm: 1px;
+  --radius-md: 2px;
+
+  /* motion — slow, short, never in the way of reading */
+  --ease-exhibit: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --duration-exhibit: 520ms;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    /* Hebrew rendering: no ligature surprises, keep numerals lining. */
+    font-variant-numeric: lining-nums;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Latin digits inside Hebrew text must stay LTR-clean. */
+  time,
+  .numerals {
+    font-feature-settings: 'tnum';
+    unicode-bidi: plaintext;
+  }
+
+  a {
+    color: inherit;
+    text-decoration-color: var(--color-brass-soft);
+    text-underline-offset: 0.25em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  ::selection {
+    background: var(--color-brass-faint);
+    color: var(--color-ink);
+  }
+
+  /* Motion is a courtesy, never a requirement. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+
+@utility paper-grain {
+  /* One subtle noise layer. Used on the hero and dark sections only —
+     never across the whole page, where it would fight the text. */
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@utility label-caps {
+  /* The typographic signature of a museum wall label. */
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  line-height: 1.4;
+  color: var(--color-ink-soft);
+}
+
+@utility rule-line {
+  border: 0;
+  border-top: 1px solid var(--color-rule);
+}
+
+@utility exhibit-enter {
+  animation: exhibit-enter var(--duration-exhibit) var(--ease-exhibit) both;
+}
+
+@keyframes exhibit-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
