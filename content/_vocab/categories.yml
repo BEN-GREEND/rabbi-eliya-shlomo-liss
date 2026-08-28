@@ -1,58 +1,99 @@
 # קטגוריות, מנוהלות בתוכן ולא בקוד.
-# הקטגוריות מוגדרות בנפרד לכל collection: קטגוריה של גלריה
-# אינה תקפה בארכיון, וה-validator אוכף זאת.
-#
-# הערכים כאן הם מתארים צורניים (סוג צילום, סוג מסמך) — לא קביעות
-# ביוגרפיות. קטגוריות תוכן אמיתיות יתווספו עם המידע.
+# מוגדרות בנפרד לכל collection — קטגוריה של גלריה אינה תקפה בארכיון,
+# וה-validator אוכף זאת.
+
+timeline:
+  - id: childhood-family
+    title: 'ילדות ומשפחה'
+  - id: yeshiva-years
+    title: 'שנות הישיבה'
+  - id: aliyah
+    title: 'עלייה לארץ'
+  - id: hebron
+    title: 'חברון'
+  - id: haifa
+    title: 'חיפה'
+  - id: teaching
+    title: 'הוראה והרבצת תורה'
+  - id: family
+    title: 'משפחה'
+  - id: legacy
+    title: 'מורשת'
+
+torah:
+  - id: sugyot
+    title: 'חידושי סוגיות'
+  - id: bava-metzia
+    title: 'בבא מציעא'
+  - id: manuscripts
+    title: 'כתבי יד'
+  - id: lectures
+    title: 'שיעורים'
+  - id: traditions
+    title: 'מסורות מרבותיו'
+
+gallery:
+  - id: portraits
+    title: 'דיוקנאות'
+  - id: tiferet-yisrael
+    title: 'ישיבת תפארת ישראל'
+  - id: family
+    title: 'משפחה'
+  - id: rabbis-students
+    title: 'רבנים ותלמידים'
+  - id: documents
+    title: 'מסמכים'
+  - id: events
+    title: 'אירועים'
+
+archive:
+  - id: semichot
+    title: 'סמיכות'
+  - id: letters
+    title: 'מכתבים'
+  - id: manuscripts
+    title: 'כתבי יד'
+  - id: press
+    title: 'עיתונות'
+  - id: yeshiva-documents
+    title: 'מסמכי ישיבה'
+  - id: books
+    title: 'ספרים'
 
 people:
   - id: family
     title: 'משפחה'
-  - id: rabbis
-    title: 'רבנים'
-  - id: students
-    title: 'תלמידים'
+  - id: teachers
+    title: 'רבותיו'
   - id: colleagues
     title: 'עמיתים'
-  - id: public
-    title: 'אישי ציבור'
-  - id: officials
-    title: 'בעלי תפקידים'
-
-gallery:
-  - id: portrait
-    title: 'דיוקן'
-  - id: group
-    title: 'צילום קבוצתי'
-  - id: event
-    title: 'אירוע'
-  - id: place
-    title: 'מקום'
-  - id: document-photo
-    title: 'מסמך מצולם'
-
-archive:
-  - id: correspondence
-    title: 'התכתבות'
-  - id: certificates
-    title: 'תעודות'
-  - id: publications
-    title: 'פרסומים'
-  - id: manuscripts
-    title: 'כתבי יד'
-
-timeline:
-  - id: unclassified
-    title: 'טרם סווג'
-
-torah:
-  - id: unclassified
-    title: 'טרם סווג'
+  - id: students
+    title: 'תלמידים'
+  - id: rosh-yeshiva
+    title: 'ראשי ישיבות'
+  - id: haifa
+    title: 'אנשי חיפה'
 
 activities:
-  - id: unclassified
-    title: 'טרם סווג'
+  - id: institution
+    title: 'מוסדות'
+  - id: teaching
+    title: 'הרבצת תורה'
 
 testimonies:
-  - id: unclassified
-    title: 'טרם סווג'
+  - id: students
+    title: 'תלמידים'
+  - id: family
+    title: 'משפחה'
+
+sources:
+  - id: encyclopedic
+    title: 'ערכים אנציקלופדיים'
+  - id: memoirs
+    title: 'זכרונות'
+  - id: press
+    title: 'עיתונות'
+  - id: books
+    title: 'ספרים'
+  - id: images
+    title: 'תצלומים'

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { getReal } from '@/lib/content'
+import { Numerals } from '@/components/primitives/Numerals'
 import { HomeSection } from './HomeSection'
 
 const KIND_LABELS: Record<string, string> = {
@@ -30,8 +31,14 @@ export function PublicActivity({ index }: { index: number }) {
                 href={item.url}
                 className="group border-rule hover:border-brass block border-t pt-5 no-underline transition-colors"
               >
-                <p className="label-caps numerals text-brass">
-                  {[KIND_LABELS[d.kind as string], years].filter(Boolean).join(' · ')}
+                <p className="label-caps text-brass">
+                  {KIND_LABELS[d.kind as string]}
+                  {years && (
+                    <>
+                      <span aria-hidden="true"> · </span>
+                      <Numerals>{years}</Numerals>
+                    </>
+                  )}
                 </p>
                 <p className="font-display group-hover:text-brass mt-2 text-xl leading-snug transition-colors">
                   {item.title}

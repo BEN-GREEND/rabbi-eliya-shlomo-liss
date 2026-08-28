@@ -15,6 +15,7 @@ export const COLLECTIONS = [
   'archive',
   'testimonies',
   'activities',
+  'sources',
 ] as const
 
 export type Collection = (typeof COLLECTIONS)[number]
@@ -28,6 +29,7 @@ export const COLLECTION_LABELS: Record<Collection, string> = {
   archive: 'ארכיון',
   testimonies: 'זכרונות ועדויות',
   activities: 'פעילותו',
+  sources: 'מקורות',
 }
 
 /** URL segment for each collection. */
@@ -39,6 +41,7 @@ export const COLLECTION_ROUTES: Record<Collection, string> = {
   archive: '/archive',
   testimonies: '/testimonies',
   activities: '/activities',
+  sources: '/sources',
 }
 
 /** Singular Hebrew label — used for the exhibit label and for error messages. */
@@ -50,6 +53,7 @@ export const COLLECTION_SINGULAR: Record<Collection, string> = {
   archive: 'מסמך',
   testimonies: 'עדות',
   activities: 'פעילות',
+  sources: 'מקור',
 }
 
 /** A parsed item before cross-collection validation has run. */

@@ -38,7 +38,9 @@ export function SelectedStations({ index }: { index: number }) {
                 className="bg-brass absolute start-0 -top-[3px] hidden h-2 w-2 rounded-full lg:block"
               />
               <Link href={item.url} className="group block no-underline lg:pt-8">
-                {date && <p className="label-caps numerals text-brass">{date}</p>}
+                <p className="label-caps numerals text-brass">
+                  {date ?? (item.data.undated ? 'תקופה לא מתוארכת' : '')}
+                </p>
                 <p className="font-display group-hover:text-brass mt-2 text-xl leading-snug transition-colors">
                   {item.title}
                 </p>

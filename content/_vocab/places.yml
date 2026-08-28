@@ -1,6 +1,24 @@
-# מקומות. טרם נמסרו מקומות אמיתיים.
-# כל ערך כאן חייב id יציב; פריטי תוכן מפנים אליו דרך places: [].
+# מקומות. כל מקום מוגדר פעם אחת; פריטים מפנים אליו דרך places: [].
 
-- id: place-unspecified
-  name: 'מקום — טרם הוזן'
-  note: 'placeholder'
+- id: sinitshe
+  name: 'סיניצ׳ה'
+  region: 'רוסיה הלבנה'
+
+- id: slutsk
+  name: 'סלוצק'
+
+- id: kletsk
+  name: 'קלצק'
+
+- id: eretz-yisrael
+  name: 'ארץ ישראל'
+
+- id: hebron
+  name: 'חברון'
+
+- id: haifa
+  name: 'חיפה'
+
+- id: hadar-hacarmel
+  name: 'הדר הכרמל'
+  region: 'חיפה'

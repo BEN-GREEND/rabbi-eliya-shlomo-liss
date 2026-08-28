@@ -74,6 +74,16 @@ export const REFERENCES: readonly ReferenceRule[] = [
     role: 'relation',
   },
 
+  // --- citations ------------------------------------------------------------
+  // Every claim's provenance is validated like any other link: cite a source
+  // that does not exist and the build stops.
+  {
+    from: '*',
+    field: 'sources[].source',
+    target: { kind: 'collection', collection: 'sources' },
+    cardinality: 'array',
+  },
+
   // --- free-form links between any two items --------------------------------
   { from: '*', field: 'related', target: { kind: 'anyItem' }, cardinality: 'array', noSelf: true },
 
@@ -104,6 +114,25 @@ export function personRulesFor(collection: Collection): ReferenceRule[] {
   return rulesFor(collection).filter(
     (r) => r.target.kind === 'collection' && r.target.collection === 'people',
   )
+}
+
+/** Hebrew labels for the kinds of tie between two people. */
+export const RELATION_LABELS: Record<string, string> = {
+  father: 'אביו',
+  mother: 'אמו',
+  son: 'בנו',
+  daughter: 'בתו',
+  brother: 'אחיו',
+  sister: 'אחותו',
+  spouse: 'בן/בת זוגו',
+  'son-in-law': 'חתנו',
+  'father-in-law': 'חותנו',
+  'brother-in-law': 'גיסו',
+  'sister-in-law': 'גיסתו',
+  teacher: 'רבו',
+  student: 'תלמידו',
+  colleague: 'עמיתו',
+  professional: 'קשר מקצועי',
 }
 
 /** Hebrew labels for the roles above, used as headings on a person page. */

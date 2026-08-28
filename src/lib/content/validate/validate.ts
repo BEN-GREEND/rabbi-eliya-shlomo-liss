@@ -57,6 +57,12 @@ const RESERVED_SLUGS = new Set([
   'robots',
 ])
 
+/** Read a possibly-absent array field as [label, value] pairs. */
+function listField(value: unknown, name: string): Array<[string, unknown]> {
+  if (!Array.isArray(value)) return []
+  return value.map((v, i) => [`${name}[${i}]`, v] as [string, unknown])
+}
+
 function describeTarget(rule: ReferenceRule, owner: Collection): string {
   switch (rule.target.kind) {
     case 'collection':
@@ -263,12 +269,8 @@ export function validateContent(): ValidationResult {
       ['preview.src', (d.preview as { src?: string } | undefined)?.src],
       ['pdf', d.pdf],
       ['file', d.file],
-      ...((d.scans as string[] | undefined) ?? []).map(
-        (s, i) => [`scans[${i}]`, s] as [string, unknown],
-      ),
-      ...((d.pages as string[] | undefined) ?? []).map(
-        (s, i) => [`pages[${i}]`, s] as [string, unknown],
-      ),
+      ...listField(d.scans, 'scans'),
+      ...listField(d.pages, 'pages'),
     ]
     for (const [field, value] of assets) {
       if (typeof value !== 'string' || !value) continue

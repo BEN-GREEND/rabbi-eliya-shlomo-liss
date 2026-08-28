@@ -56,11 +56,17 @@ export function loadAll(): LoadResult {
       const result = schemas[collection].safeParse(parsed.data)
       if (!result.success) {
         for (const issue of result.error.issues) {
+          // Strict schemas: an unknown field is a mistake, not something to
+          // drop in silence. Say which key, and what to do about it.
+          const unknownKeys = issue.code === 'unrecognized_keys' ? issue.keys : null
           issues.push({
             filePath,
             collection,
-            field: issue.path.join('.') || '(root)',
-            message: issue.message,
+            field: unknownKeys ? unknownKeys.join(', ') : issue.path.join('.') || '(root)',
+            message: unknownKeys
+              ? `שדה שאינו מוכר ל-schema של "${collection}". בדוק שגיאת כתיב, ` +
+                'או הוסף את השדה ל-src/lib/content/schemas.ts.'
+              : issue.message,
           })
         }
         continue

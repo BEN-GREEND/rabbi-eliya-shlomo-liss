@@ -156,8 +156,17 @@ export function countPersonItems(personId: string): number {
 // ---- ordering --------------------------------------------------------------
 
 function yearOf(item: Item): number {
-  const d = item.data as { year?: number; date?: string; startYear?: number; birthYear?: number }
+  const d = item.data as {
+    year?: number
+    sortYear?: number
+    date?: string
+    startYear?: number
+    birthYear?: number
+  }
   if (typeof d.year === 'number') return d.year
+  // Ordering metadata for an undated episode. Never displayed — it places the
+  // item on the spine without asserting a date.
+  if (typeof d.sortYear === 'number') return d.sortYear
   if (typeof d.startYear === 'number') return d.startYear
   if (typeof d.birthYear === 'number') return d.birthYear
   if (d.date) return new Date(d.date).getFullYear()

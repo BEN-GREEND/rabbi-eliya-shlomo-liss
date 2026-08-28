@@ -33,6 +33,36 @@ const zMedia = z.object({
 })
 
 /**
+ * Provenance.
+ *
+ * Every claim on this site carries its sources and a confidence level. This
+ * is what separates an archive from a blog: a reader — and a future editor —
+ * can always ask "how do we know this?" and get an answer.
+ *
+ * Sources are references to items in the `sources` collection, so one
+ * bibliographic record is described once and cited everywhere.
+ */
+const zSourceRef = z.object({
+  source: zId,
+  /** Page, issue, folio — where inside the source this claim sits. */
+  locator: z.string().optional(),
+  note: z.string().optional(),
+})
+
+export const confidenceLevels = ['high', 'medium', 'low'] as const
+
+const provenance = {
+  sources: z.array(zSourceRef).default([]),
+  confidence: z.enum(confidenceLevels).optional(),
+  /**
+   * An unresolved question, a conflict between sources, or a claim awaiting a
+   * primary source. Contradictions are recorded here, never quietly resolved.
+   */
+  researchNote: z.string().optional(),
+  researchNeeded: z.boolean().default(false),
+}
+
+/**
  * Dating. A date is either known or approximate — never both, and never
  * invented. `approximateDate` always renders with an explicit "בערך" prefix.
  */
@@ -45,6 +75,7 @@ const dating = {
 
 /** Fields every collection shares. */
 const base = {
+  ...provenance,
   id: zId,
   slug: zSlug,
   title: z.string().min(1),
@@ -70,15 +101,55 @@ export const personRelationTypes = [
   'daughter',
   'brother',
   'sister',
+  'spouse',
   'son-in-law',
   'father-in-law',
+  'brother-in-law',
+  'sister-in-law',
   'teacher',
   'student',
   'colleague',
   'professional',
 ] as const
 
+/**
+ * How close a source stands to the events it describes. This, not prose
+ * confidence, is what a reader needs in order to weigh a claim.
+ */
+export const sourceTypes = [
+  'primary',
+  'firsthand',
+  'contemporary',
+  'retrospective',
+  'family',
+  'secondary',
+  'unverified',
+] as const
+
 export const schemas = {
+  /**
+   * The bibliography. One record per source, cited by id from anywhere.
+   * A source we have located but not yet read is still a record — knowing
+   * what we have not read is part of the archive.
+   */
+  sources: z.object({
+    ...base,
+    sourceType: z.enum(sourceTypes),
+    author: z.string().optional(),
+    publication: z.string().optional(),
+    issue: z.string().optional(),
+    /** Locator inside the publication, e.g. "עמ׳ 41". Distinct from an
+        archive item's `pages`, which lists scan files. */
+    pageRef: z.string().optional(),
+    publishedDate: z.string().optional(),
+    hebrewYear: z.string().optional(),
+    url: z.string().optional(),
+    /** obtained = read in full. located = found but not yet read. sought = not found. */
+    status: z.enum(['obtained', 'located', 'sought']).default('sought'),
+    priority: z.enum(['very-high', 'high', 'normal']).optional(),
+    people: z.array(zId).default([]),
+  }).strict(),
+
   people: z.object({
     ...base,
     name: z.string().min(1),
@@ -93,8 +164,19 @@ export const schemas = {
     approximateDates: z.boolean().default(false),
     roles: z.array(z.string()).default([]),
     relationToRabbi: z.string().optional(),
+    /**
+     * Named in a source as connected to the Rabbi, but the connection itself
+     * has not been verified. Such a person is listed apart, never presented
+     * as an established student or colleague.
+     */
+    researchCandidate: z.boolean().default(false),
     shortBio: z.string().optional(),
     image: zImage.optional(),
+    birthHebrewDate: z.string().optional(),
+    deathHebrewDate: z.string().optional(),
+    birthPlace: z.string().optional(),
+    deathPlace: z.string().optional(),
+    burialPlace: z.string().optional(),
     aliases: z.array(z.string()).default([]),
     periods: z.array(z.string()).default([]),
     relations: z
@@ -106,45 +188,58 @@ export const schemas = {
         }),
       )
       .default([]),
-    sources: z.array(z.string()).default([]),
     people: z.array(zId).default([]),
-  }),
+  }).strict(),
 
   timeline: z.object({
     ...base,
     ...dating,
-    /** The spine of the biography page. Required. */
-    year: z.number().int().min(1000).max(2200),
+    /**
+     * Omitted for an undated episode. A life does not arrive pre-dated, and
+     * inventing a year to fill the field would be inventing history.
+     */
+    undated: z.boolean().default(false),
+    /**
+     * Ordering metadata only — never rendered anywhere. Lets an undated
+     * episode sit in the right place on the spine without asserting a date.
+     */
+    sortYear: z.number().int().optional(),
     dateDisplay: z.string().optional(),
     location: z.string().optional(),
     image: zImage.optional(),
     people: z.array(zId).default([]),
-  }),
+  }).strict(),
 
   torah: z.object({
     ...base,
     ...dating,
-    kind: z.enum(['article', 'lecture', 'excerpt', 'letter', 'manuscript', 'quote']),
+    kind: z.enum(['article', 'lecture', 'excerpt', 'letter', 'manuscript', 'quote', 'book']),
     topic: z.array(z.string()).default([]),
     parasha: z.string().optional(),
     coverImage: zImage.optional(),
     pdf: z.string().optional(),
     scans: z.array(z.string()).default([]),
     people: z.array(zId).default([]),
-  }),
+  }).strict(),
 
   gallery: z.object({
     ...base,
     ...dating,
     description: z.string().optional(),
-    image: zImage,
+    /**
+     * A museum catalogues objects it has not yet acquired. `awaited` means the
+     * photograph is identified and described but the file is not in hand;
+     * the site shows the label with an empty plate rather than nothing.
+     */
+    assetStatus: z.enum(['present', 'awaited', 'unavailable']).default('present'),
+    image: zImage.optional(),
     location: z.string().optional(),
     photographer: z.string().optional(),
     copyright: z.string().optional(),
     /** Drives the museum composition. Content decides emphasis, not the code. */
     emphasis: z.enum(['small', 'medium', 'large', 'full']).default('medium'),
     people: z.array(zId).default([]),
-  }),
+  }).strict(),
 
   archive: z.object({
     ...base,
@@ -159,6 +254,8 @@ export const schemas = {
       'document',
     ]),
     description: z.string().optional(),
+    /** Whether the document itself is in hand, merely located, or still sought. */
+    acquisitionStatus: z.enum(['obtained', 'located', 'sought']).default('obtained'),
     /** Person ids. Empty when unknown — never guessed. */
     author: zId.optional(),
     recipient: zId.optional(),
@@ -168,7 +265,7 @@ export const schemas = {
     pages: z.array(z.string()).default([]),
     transcription: z.string().optional(),
     people: z.array(zId).default([]),
-  }),
+  }).strict(),
 
   testimonies: z.object({
     ...base,
@@ -183,7 +280,7 @@ export const schemas = {
     media: zMedia.optional(),
     mentions: z.array(zId).default([]),
     people: z.array(zId).default([]),
-  }),
+  }).strict(),
 
   activities: z.object({
     ...base,
@@ -196,7 +293,7 @@ export const schemas = {
     image: zImage.optional(),
     periods: z.array(z.string()).default([]),
     people: z.array(zId).default([]),
-  }),
+  }).strict(),
 } as const
 
 export type Schemas = typeof schemas

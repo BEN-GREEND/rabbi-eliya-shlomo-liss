@@ -135,11 +135,16 @@
     text-wrap: pretty;
   }
 
-  /* Latin digits inside Hebrew text must stay LTR-clean. */
+  /* Latin digits inside Hebrew text must stay LTR-clean.
+     `isolate`, not `plaintext`: plaintext resolves a BLOCK's base direction
+     from its first strong character, so a paragraph beginning with a digit
+     ("1901–1963") silently flips to LTR and aligns itself to the left edge.
+     `isolate` keeps the numeric run from reordering its neighbours while
+     leaving the block's direction — and therefore its alignment — RTL. */
   time,
   .numerals {
     font-feature-settings: 'tnum';
-    unicode-bidi: plaintext;
+    unicode-bidi: isolate;
   }
 
   a {

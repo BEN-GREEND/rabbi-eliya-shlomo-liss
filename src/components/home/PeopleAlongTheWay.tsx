@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { assetExists } from '@/lib/assets'
 import { countPersonItems, getReal } from '@/lib/content'
 import { lifeSpan } from '@/lib/utils/format'
+import { Numerals } from '@/components/primitives/Numerals'
 import { HomeSection } from './HomeSection'
 
 /** The site's subject is the exhibition, not one of the people in it. */
@@ -17,6 +18,9 @@ const SUBJECT_ID = 'rabbi-eliya-shlomo-liss'
 export function PeopleAlongTheWay({ index }: { index: number }) {
   const people = getReal('people')
     .filter((p) => p.id !== SUBJECT_ID)
+    // Research candidates are named in a source but their connection to the
+    // Rabbi is unverified. They belong on /people, not in the shop window.
+    .filter((p) => !p.data.researchCandidate)
     .sort((a, b) => countPersonItems(b.id) - countPersonItems(a.id))
     .slice(0, 6)
 
@@ -60,7 +64,11 @@ export function PeopleAlongTheWay({ index }: { index: number }) {
                 <p className="font-display group-hover:text-brass mt-3 text-[1.0625rem] leading-snug transition-colors">
                   {(d.displayName as string) || (d.name as string) || person.title}
                 </p>
-                {years && <p className="label-caps numerals text-ink-faint mt-1">{years}</p>}
+                {years && (
+                  <p className="label-caps text-ink-faint mt-1">
+                    <Numerals>{years}</Numerals>
+                  </p>
+                )}
                 {typeof d.relationToRabbi === 'string' && d.relationToRabbi && (
                   <p className="label-caps text-ink-faint mt-1">{d.relationToRabbi}</p>
                 )}

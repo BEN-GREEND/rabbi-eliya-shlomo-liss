@@ -15,6 +15,7 @@ import { PlaceholderNotice } from '@/components/primitives/PlaceholderNotice'
 import { Rule } from '@/components/primitives/Rule'
 import { YearMark } from '@/components/primitives/YearMark'
 import { PersonList } from './PersonChip'
+import { Provenance, type SourceRef } from './Provenance'
 import { Prose } from './Prose'
 import { RelatedItems } from './RelatedItems'
 
@@ -90,6 +91,23 @@ export function ExhibitPage({ collection, slug }: { collection: Collection; slug
         </dl>
 
         {d.placeholder ? <PlaceholderNotice className="mb-10" /> : null}
+        {d.acquisitionStatus === 'sought' && (
+          <PlaceholderNotice className="mb-10">המסמך טרם אותר — רשומת קטלוג בלבד</PlaceholderNotice>
+        )}
+        {d.acquisitionStatus === 'located' && (
+          <PlaceholderNotice className="mb-10">המסמך אותר אך טרם הושג</PlaceholderNotice>
+        )}
+        {d.assetStatus === 'awaited' && (
+          <PlaceholderNotice className="mb-10">הקובץ טרם הועלה לארכיון</PlaceholderNotice>
+        )}
+        {d.status === 'located' && (
+          <PlaceholderNotice className="mb-10">
+            המקור אותר ביבליוגרפית — טרם נקרא במלואו
+          </PlaceholderNotice>
+        )}
+        {d.status === 'sought' && (
+          <PlaceholderNotice className="mb-10">המקור טרם אותר</PlaceholderNotice>
+        )}
 
         <Prose source={item.body} />
 
@@ -100,6 +118,13 @@ export function ExhibitPage({ collection, slug }: { collection: Collection; slug
           {typeof d.recipient === 'string' && <PersonList ids={[d.recipient]} label="נמען" />}
           {typeof d.narrator === 'string' && <PersonList ids={[d.narrator]} label="מסר את העדות" />}
         </div>
+
+        <Provenance
+          sources={(d.sources as SourceRef[] | undefined) ?? []}
+          confidence={d.confidence as string | undefined}
+          researchNote={d.researchNote as string | undefined}
+          researchNeeded={d.researchNeeded as boolean | undefined}
+        />
 
         <RelatedItems id={item.id} />
       </article>
