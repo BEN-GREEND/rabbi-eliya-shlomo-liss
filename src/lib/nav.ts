@@ -15,4 +15,5 @@ export const PRIMARY_NAV: NavLink[] = [
   { href: '/family', label: 'משפחה' },
 ]
 
+export const SEARCH_LINK: NavLink = { href: '/search', label: 'חיפוש' }
 export const MEMORIAL_LINK: NavLink = { href: '/memorial', label: 'נר הזכרון' }

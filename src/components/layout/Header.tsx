@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { getSite } from '@/lib/site'
-import { MEMORIAL_LINK } from '@/lib/nav'
+import { MEMORIAL_LINK, SEARCH_LINK } from '@/lib/nav'
 import { CandleGlyph } from './CandleGlyph'
 import { MobileMenu } from './MobileMenu'
 import { NavLinks } from './NavLinks'
@@ -23,8 +23,27 @@ export function Header() {
         </nav>
 
         <Link
+          href={SEARCH_LINK.href}
+          aria-label="חיפוש"
+          className="text-ink-soft hover:text-brass ms-auto hidden items-center gap-2 text-[0.95rem] no-underline transition-colors lg:ms-0 lg:flex"
+        >
+          <svg
+            viewBox="0 0 16 16"
+            aria-hidden="true"
+            className="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.4"
+          >
+            <circle cx="7" cy="7" r="5" />
+            <path d="M10.8 10.8 L14.5 14.5" strokeLinecap="round" />
+          </svg>
+          {SEARCH_LINK.label}
+        </Link>
+
+        <Link
           href={MEMORIAL_LINK.href}
-          className="border-rule text-ink-soft hover:text-brass ms-auto hidden items-center gap-2 border-s ps-6 text-[0.95rem] no-underline transition-colors lg:ms-0 lg:flex"
+          className="border-rule text-ink-soft hover:text-brass hidden items-center gap-2 border-s ps-6 text-[0.95rem] no-underline transition-colors lg:flex"
         >
           <CandleGlyph className="text-brass h-4 w-2.5" />
           {MEMORIAL_LINK.label}

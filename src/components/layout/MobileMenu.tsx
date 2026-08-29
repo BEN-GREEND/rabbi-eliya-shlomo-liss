@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { MEMORIAL_LINK, PRIMARY_NAV } from '@/lib/nav'
+import { MEMORIAL_LINK, PRIMARY_NAV, SEARCH_LINK } from '@/lib/nav'
 import { CandleGlyph } from './CandleGlyph'
 
 /**
@@ -87,9 +87,17 @@ export function MobileMenu() {
             </ul>
 
             <Link
+              href={SEARCH_LINK.href}
+              onClick={() => setOpen(false)}
+              className="font-display text-ink mt-10 block text-xl no-underline"
+            >
+              {SEARCH_LINK.label}
+            </Link>
+
+            <Link
               href={MEMORIAL_LINK.href}
               onClick={() => setOpen(false)}
-              className="font-display text-ink mt-10 inline-flex items-center gap-3 text-xl no-underline"
+              className="font-display text-ink mt-5 inline-flex items-center gap-3 text-xl no-underline"
             >
               <CandleGlyph className="text-brass h-6 w-4" />
               {MEMORIAL_LINK.label}
