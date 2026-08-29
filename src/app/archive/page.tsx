@@ -4,7 +4,8 @@ import { getAll, getById } from '@/lib/content'
 import { DOC_TYPE_LABELS } from '@/lib/doc-types'
 import { formatDate } from '@/lib/utils/format'
 import { Container } from '@/components/primitives/Container'
-import { PlaceholderNotice } from '@/components/primitives/PlaceholderNotice'
+import { SectionHeading } from '@/components/primitives/SectionHeading'
+import { EmptyState } from '@/components/primitives/EmptyState'
 import { ArchiveTable, type ArchiveDoc, type Drawer } from '@/components/archive/ArchiveTable'
 
 export const metadata: Metadata = { title: 'ארכיון' }
@@ -48,16 +49,19 @@ export default function ArchivePage() {
   return (
     <Container width="wide" className="py-20 lg:py-28">
       <header className="mb-12">
-        <p className="label-caps text-brass">אוסף</p>
-        <h1 className="font-display mt-3 text-4xl sm:text-5xl">ארכיון</h1>
-        <p className="text-ink-soft mt-5 max-w-[38rem]">
+        <SectionHeading eyebrow="אוסף" title="ארכיון" glyph="archive" as="h1" index={docs.length} />
+        <p className="text-ink-soft mt-6 max-w-[38rem] leading-relaxed">
           מכתבים, כתבי יד, תעודות ומסמכים. הארכיון מקטלג גם מוצגים שאינם בידיו — כאלה שנשמרים אצל
           המשפחה, כאלה שטרם נסרקו, וכאלה שאבדו. לכל פריט מצוין מה בדיוק ידוע עליו.
         </p>
       </header>
 
       {docs.length === 0 ? (
-        <PlaceholderNotice>הארכיון ריק — טרם הוזנו מסמכים</PlaceholderNotice>
+        <EmptyState
+          glyph="archive"
+          title="ארכיון שממתין למסמכים"
+          note="טרם הוזנו מסמכים לארכיון."
+        />
       ) : (
         <ArchiveTable docs={docs} drawers={drawers} />
       )}

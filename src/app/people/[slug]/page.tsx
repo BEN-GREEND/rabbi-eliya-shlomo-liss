@@ -21,9 +21,10 @@ import { RELATION_LABELS } from '@/lib/content/references'
 import { itemMetadata } from '@/lib/seo'
 import { formatDate, lifeSpan } from '@/lib/utils/format'
 import { Container } from '@/components/primitives/Container'
+import { Glyph, COLLECTION_GLYPH } from '@/components/primitives/Glyph'
+import { SectionHeading } from '@/components/primitives/SectionHeading'
 import { PlaceholderNotice } from '@/components/primitives/PlaceholderNotice'
 import { Numerals } from '@/components/primitives/Numerals'
-import { Rule } from '@/components/primitives/Rule'
 import { Prose } from '@/components/exhibit/Prose'
 import { Provenance, type SourceRef } from '@/components/exhibit/Provenance'
 
@@ -53,6 +54,21 @@ function Fact({ label, children }: { label: string; children?: React.ReactNode }
     <div>
       <dt className="label-caps text-ink-faint">{label}</dt>
       <dd className="mt-1 text-[0.95rem]">{children}</dd>
+    </div>
+  )
+}
+
+/** A row of tags: roles, places, periods. Rendered only when non-empty. */
+function ChipRow({ label, values }: { label: string; values: string[] }) {
+  if (!values.length) return null
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+      <span className="label-caps text-ink-faint w-full sm:w-auto">{label}</span>
+      {values.map((value) => (
+        <span key={value} className="chip">
+          {value}
+        </span>
+      ))}
     </div>
   )
 }
@@ -98,54 +114,68 @@ export default async function PersonPage({ params }: { params: Promise<{ slug: s
   return (
     <Container width="default" className="py-20 lg:py-28">
       <article>
-        <p className="label-caps text-brass">{COLLECTION_LABELS.people}</p>
+        <div className="mb-6 flex items-center gap-3">
+          <Glyph name="person" className="text-brass h-4 w-4" />
+          <p className="eyebrow">{COLLECTION_LABELS.people}</p>
+          <span aria-hidden="true" className="bg-rule h-px flex-1" />
+        </div>
 
         {/* ---- catalogue card ---- */}
-        <div className="mt-6 grid gap-x-10 gap-y-8 sm:grid-cols-[13rem_1fr]">
-          <div className="border-rule bg-paper-deep relative aspect-[4/5] w-full max-w-[13rem] overflow-hidden border">
-            {hasPortrait && image ? (
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                sizes="13rem"
-                className="object-cover"
-                priority
-              />
-            ) : (
-              <span
-                aria-hidden="true"
-                className="font-display text-brass-line/20 absolute inset-0 flex items-center justify-center text-6xl"
-              >
-                {String((d.displayName ?? d.name ?? person.title) as string).charAt(0)}
-              </span>
-            )}
+        <div className="grid gap-x-10 gap-y-8 sm:grid-cols-[13rem_1fr]">
+          <div className="bg-stone/50 border-paper-edge h-fit border p-2.5 shadow-[var(--shadow-rest)]">
+            <div className="border-rule bg-paper-deep relative aspect-[4/5] w-full overflow-hidden border">
+              {hasPortrait && image ? (
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  sizes="13rem"
+                  className="object-cover"
+                  priority
+                />
+              ) : (
+                <span
+                  aria-hidden="true"
+                  className="font-display text-brass-line/25 absolute inset-0 flex items-center justify-center text-6xl"
+                >
+                  {String((d.displayName ?? d.name ?? person.title) as string).charAt(0)}
+                </span>
+              )}
+            </div>
           </div>
 
           <div>
-            <h1 className="font-display text-4xl leading-tight sm:text-5xl">
+            <h1 className="font-display text-4xl leading-[1.15] sm:text-5xl">
               {(d.displayName as string) || (d.name as string) || person.title}
             </h1>
             {years && (
-              <p className="label-caps text-ink-soft mt-3">
-                <Numerals>{years}</Numerals>
+              <p className="mt-4 flex items-center gap-3">
+                <span aria-hidden="true" className="bg-wine-line/50 h-px w-8" />
+                <span className="font-display text-wine numerals text-lg leading-none font-medium">
+                  <Numerals>{years}</Numerals>
+                </span>
               </p>
             )}
             {typeof d.relationToRabbi === 'string' && d.relationToRabbi && (
-              <p className="font-display text-ink-soft mt-4 max-w-[34rem] text-xl leading-relaxed">
+              <p className="font-display text-ink-soft mt-5 max-w-[34rem] text-xl leading-relaxed">
                 {d.relationToRabbi}
               </p>
             )}
 
-            <dl className="mt-8 grid gap-x-10 gap-y-5 sm:grid-cols-2">
+            {(roles.length > 0 || places.length > 0 || periods.length > 0) && (
+              <div className="mt-7 space-y-3">
+                <ChipRow label="תפקידים" values={roles} />
+                <ChipRow label="מקומות" values={places} />
+                <ChipRow label="תקופות" values={periods} />
+              </div>
+            )}
+
+            <dl className="bg-stone/45 border-paper-edge mt-8 grid gap-x-10 gap-y-5 border px-6 py-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] sm:grid-cols-2">
               <Fact label="נולד">{d.birthHebrewDate as string}</Fact>
               <Fact label="נפטר">{d.deathHebrewDate as string}</Fact>
               <Fact label="מקום לידה">{d.birthPlace as string}</Fact>
               <Fact label="מקום פטירה">{d.deathPlace as string}</Fact>
               <Fact label="מקום קבורה">{d.burialPlace as string}</Fact>
-              <Fact label="תפקידים">{roles.length ? roles.join(' · ') : undefined}</Fact>
-              <Fact label="מקומות">{places.length ? places.join(' · ') : undefined}</Fact>
-              <Fact label="תקופות">{periods.length ? periods.join(' · ') : undefined}</Fact>
               <Fact label="שם נעורים">{d.maidenName as string}</Fact>
               <Fact label="כינויים">
                 {((d.aliases as string[]) ?? []).join(' · ') || undefined}
@@ -160,7 +190,10 @@ export default async function PersonPage({ params }: { params: Promise<{ slug: s
           </PlaceholderNotice>
         )}
 
-        <Rule className="my-12" />
+        <div className="my-14 flex items-center gap-4">
+          <span aria-hidden="true" className="bg-brass-line/45 h-px w-16" />
+          <span aria-hidden="true" className="bg-rule h-px flex-1" />
+        </div>
 
         {typeof d.shortBio === 'string' && d.shortBio && (
           <p className="font-display mb-8 max-w-[38rem] text-xl leading-relaxed">{d.shortBio}</p>
@@ -169,28 +202,34 @@ export default async function PersonPage({ params }: { params: Promise<{ slug: s
 
         {/* ---- ties to other people ---- */}
         {relations.length > 0 && (
-          <section className="mt-16" aria-labelledby="relations-heading">
-            <Rule />
-            <h2 id="relations-heading" className="label-caps text-brass mt-6">
-              קשרים
-            </h2>
-            <ul className="mt-5 grid gap-x-10 gap-y-3 sm:grid-cols-2">
+          <section className="mt-20" aria-labelledby="relations-heading">
+            <SectionHeading
+              eyebrow="הרשת סביבו"
+              title="קשרים"
+              glyph="person"
+              className="[&_h2]:text-3xl sm:[&_h2]:text-4xl"
+            />
+            <ul className="mt-8 grid gap-4 sm:grid-cols-2">
               {relations.map((rel) => {
                 const other = getById(rel.person)
                 if (!other) return null
                 const od = other.data as { displayName?: string; name?: string }
                 return (
-                  <li key={`${rel.person}-${rel.type}`} className="border-rule border-s ps-4">
-                    <span className="label-caps text-ink-faint">
-                      {RELATION_LABELS[rel.type] ?? rel.type}
-                    </span>
+                  <li key={`${rel.person}-${rel.type}`}>
                     <Link
                       href={other.url}
-                      className="font-display hover:text-brass mt-0.5 block text-lg no-underline transition-colors"
+                      className="group surface-card hover:surface-card-hover block px-5 py-4 no-underline"
                     >
-                      {od.displayName || od.name || other.title}
+                      <span className="eyebrow block">{RELATION_LABELS[rel.type] ?? rel.type}</span>
+                      <span className="font-display group-hover:text-wine mt-1.5 block text-lg transition-colors">
+                        {od.displayName || od.name || other.title}
+                      </span>
+                      {rel.note && (
+                        <span className="text-ink-soft mt-1 block text-[0.9rem] leading-snug">
+                          {rel.note}
+                        </span>
+                      )}
                     </Link>
-                    {rel.note && <p className="text-ink-soft text-[0.9rem]">{rel.note}</p>}
                   </li>
                 )
               })}
@@ -200,20 +239,28 @@ export default async function PersonPage({ params }: { params: Promise<{ slug: s
 
         {/* ---- everything in the archive that touches this person ---- */}
         {grouped.length > 0 && (
-          <section className="mt-16" aria-labelledby="exhibits-heading">
-            <Rule />
-            <h2 id="exhibits-heading" className="label-caps text-brass mt-6">
-              מוצגים הקשורים לאישיות
-            </h2>
+          <section className="mt-20" aria-labelledby="exhibits-heading">
+            <SectionHeading
+              eyebrow="מן הארכיון"
+              title="מוצגים הקשורים לאישיות"
+              glyph="archive"
+              className="[&_h2]:text-3xl sm:[&_h2]:text-4xl"
+            />
 
-            <div className="mt-8 space-y-10">
+            <div className="mt-10 space-y-12">
               {grouped.map(({ collection, items }) => (
                 <div key={collection}>
-                  <h3 className="label-caps text-ink-faint">
-                    {COLLECTION_LABELS[collection as Collection]}
-                    <span className="numerals text-brass ms-2">{items.length}</span>
+                  <h3 className="border-rule flex items-center gap-2.5 border-b pb-3">
+                    <Glyph
+                      name={COLLECTION_GLYPH[collection] ?? 'archive'}
+                      className="text-brass-line h-4 w-4"
+                    />
+                    <span className="label-caps text-ink">
+                      {COLLECTION_LABELS[collection as Collection]}
+                    </span>
+                    <span className="numerals label-caps text-brass">{items.length}</span>
                   </h3>
-                  <ul className="mt-4 grid gap-x-10 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {items.map((item) => {
                       const date = formatDate(item.data)
                       const role = ROLE_LABELS[item.role]
@@ -221,16 +268,18 @@ export default async function PersonPage({ params }: { params: Promise<{ slug: s
                         <li key={`${item.id}-${item.role}`}>
                           <Link
                             href={item.url}
-                            className="group border-rule hover:border-brass block border-s ps-4 no-underline transition-colors"
+                            className="group surface-card hover:surface-card-hover block h-full px-5 py-4 no-underline"
                           >
-                            <span className="label-caps text-ink-faint">
+                            <span className="eyebrow block">
                               {role ?? COLLECTION_SINGULAR[item.collection]}
                             </span>
-                            <span className="font-display group-hover:text-brass block text-lg leading-snug transition-colors">
+                            <span className="font-display group-hover:text-wine mt-1.5 block text-lg leading-snug transition-colors">
                               {item.title}
                             </span>
                             {date && (
-                              <span className="label-caps numerals text-ink-faint">{date}</span>
+                              <span className="label-caps numerals text-ink-faint mt-2 block">
+                                {date}
+                              </span>
                             )}
                           </Link>
                         </li>

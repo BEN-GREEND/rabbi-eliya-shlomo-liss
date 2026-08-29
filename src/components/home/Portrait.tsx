@@ -1,13 +1,15 @@
 import Image from 'next/image'
 import { assetExists } from '@/lib/assets'
 import { getSite } from '@/lib/site'
+import { Glyph } from '@/components/primitives/Glyph'
 
 /**
  * The portrait plate.
  *
- * If the photograph is on disk it is shown. If it is not, the plate stands
- * empty behind its label — the way a case waits for the object that belongs
- * in it. No stand-in image is ever generated.
+ * A mounted object: a brass hairline offset behind the frame, a paper mat, and
+ * the wall label beneath. If the photograph is not here the plate carries
+ * corner mounts and a short line — a place prepared for a print, not a broken
+ * image and not a fabricated one.
  */
 export function Portrait() {
   const site = getSite()
@@ -15,43 +17,56 @@ export function Portrait() {
 
   return (
     <figure className="relative">
-      <div className="border-rule bg-paper-deep relative aspect-[4/5] overflow-hidden border">
-        {present ? (
-          <Image
-            src={site.portrait}
-            alt={site.portraitAlt || site.name}
-            fill
-            priority
-            sizes="(min-width: 1024px) 34vw, 100vw"
-            className="object-cover"
-          />
-        ) : (
-          <div className="paper-grain absolute inset-0 flex flex-col items-center justify-center gap-3">
-            {/* A drawn frame corner, not an icon: the plate reads as empty, not broken. */}
-            <svg
-              viewBox="0 0 48 60"
-              aria-hidden="true"
-              className="text-brass/25 h-14 w-11"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-            >
-              <rect x="0.5" y="0.5" width="47" height="59" />
-              <path d="M0.5 44 L16 28 L28 40 L36 33 L47.5 44" />
-              <circle cx="33" cy="16" r="5" />
-            </svg>
-            <figcaption className="label-caps text-ink-faint text-center">
-              תצוגה ממתינה
-              <span className="mt-1 block font-normal tracking-normal">דיוקן טרם הועלה</span>
-            </figcaption>
-          </div>
-        )}
+      {/* Offset brass rule, so the frame sits on something. */}
+      <div
+        aria-hidden="true"
+        className="border-brass-line/40 pointer-events-none absolute -top-3 -bottom-3 border-y"
+        style={{ insetInlineStart: '0.75rem', insetInlineEnd: '-0.75rem' }}
+      />
+
+      <div className="border-rule bg-paper relative border p-3 shadow-[var(--shadow-rest)]">
+        <div className="bg-paper-deep border-rule-soft relative aspect-4/5 overflow-hidden border">
+          {present ? (
+            <Image
+              src={site.portrait}
+              alt={site.portraitAlt || site.name}
+              fill
+              priority
+              sizes="(min-width: 1024px) 24rem, 100vw"
+              className="object-cover"
+            />
+          ) : (
+            <div className="paper-grain absolute inset-0 flex flex-col items-center justify-center gap-3">
+              {/* Photo corner mounts. */}
+              {(
+                [
+                  'start-3 top-3 border-t border-s',
+                  'end-3 top-3 border-t border-e',
+                  'start-3 bottom-3 border-b border-s',
+                  'end-3 bottom-3 border-b border-e',
+                ] as const
+              ).map((pos) => (
+                <span
+                  key={pos}
+                  aria-hidden="true"
+                  className={`border-brass-line/50 absolute h-5 w-5 ${pos}`}
+                />
+              ))}
+              <Glyph name="gallery" className="text-brass-line/45 h-8 w-8" />
+              <figcaption className="label-caps text-ink-soft text-center">
+                תצוגה ממתינה
+                <span className="text-ink-faint mt-1 block font-normal tracking-normal">
+                  דיוקן טרם הועלה
+                </span>
+              </figcaption>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Wall label under the plate — the same grammar every exhibit uses. */}
-      <div className="border-rule mt-4 border-s ps-4">
-        <p className="label-caps text-brass">דיוקן</p>
-        <p className="text-ink-soft mt-1 text-[0.95rem]">{site.name}</p>
+      <div className="border-brass mt-5 border-s-2 ps-4">
+        <p className="eyebrow">דיוקן</p>
+        <p className="text-ink mt-1.5 text-[0.95rem]">{site.name}</p>
         {present && site.portraitCredit && (
           <p className="label-caps text-ink-faint mt-1.5 text-[0.625rem]">
             מקור: {site.portraitCredit}

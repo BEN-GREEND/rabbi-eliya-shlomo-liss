@@ -17,7 +17,14 @@ export function PublicActivity({ index }: { index: number }) {
   const items = getReal('activities').slice(0, 6)
 
   return (
-    <HomeSection index={index} title="פעילות ציבורית" href="/activities" empty={items.length === 0}>
+    <HomeSection
+      index={index}
+      glyph="activity"
+      ground="paper"
+      title="פעילות ציבורית"
+      href="/activities"
+      empty={items.length === 0}
+    >
       <ul className="grid gap-x-12 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((item) => {
           const d = item.data as Record<string, unknown>

@@ -16,30 +16,36 @@ export default function MemorialPage() {
   const site = getSite()
 
   return (
-    <Container width="narrow" className="py-24 lg:py-32">
-      <div className="text-center">
-        <p className="label-caps text-brass tracking-[var(--tracking-wide-label)]">
-          {site.memorial.title}
+    <div className="from-stone/70 via-paper to-paper relative isolate overflow-x-clip bg-gradient-to-b">
+      <Container width="narrow" className="py-24 lg:py-32">
+        <div className="text-center">
+          <div className="mx-auto mb-6 flex w-fit items-center gap-3">
+            <span aria-hidden="true" className="bg-wine-line/40 h-px w-8" />
+            <p className="eyebrow">{site.memorial.title}</p>
+            <span aria-hidden="true" className="bg-wine-line/40 h-px w-8" />
+          </div>
+          <h1 className="font-display text-4xl leading-[1.15] sm:text-5xl lg:text-[3.5rem]">
+            {site.name}
+          </h1>
+        </div>
+
+        <div className="mt-24">
+          <MemorialCandle />
+        </div>
+
+        {site.memorial.text && (
+          <>
+            <Rule className="mt-28" />
+            <p className="font-display text-ink-soft mx-auto mt-12 max-w-[34rem] text-center text-lg leading-relaxed">
+              {site.memorial.text}
+            </p>
+          </>
+        )}
+
+        <p className="label-caps text-ink-faint mx-auto mt-24 max-w-[30rem] text-center">
+          לא נשמר כל מידע מזהה. אין הרשמה, ואין צורך למסור שם.
         </p>
-        <h1 className="font-display mt-5 text-4xl leading-tight sm:text-5xl">{site.name}</h1>
-      </div>
-
-      <div className="mt-20">
-        <MemorialCandle />
-      </div>
-
-      {site.memorial.text && (
-        <>
-          <Rule className="mt-24" />
-          <p className="text-ink-soft mx-auto mt-10 max-w-[34rem] text-center leading-relaxed">
-            {site.memorial.text}
-          </p>
-        </>
-      )}
-
-      <p className="label-caps text-ink-faint mx-auto mt-24 max-w-[30rem] text-center">
-        לא נשמר כל מידע מזהה. אין הרשמה, ואין צורך למסור שם.
-      </p>
-    </Container>
+      </Container>
+    </div>
   )
 }

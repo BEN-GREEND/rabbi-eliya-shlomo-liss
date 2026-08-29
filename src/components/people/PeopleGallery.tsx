@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { cn } from '@/lib/utils/cn'
+import { EmptyState } from '@/components/primitives/EmptyState'
 
 export interface PersonCard {
   id: string
@@ -117,7 +118,7 @@ export function PeopleGallery({
       </ul>
 
       {shown.length === 0 && (
-        <p className="label-caps text-ink-faint py-10 text-center">אין אישים בקטגוריה זו</p>
+        <EmptyState glyph="person" title="מקום שממתין לדמות" note="בקטגוריה זו טרם נוספו אישים." />
       )}
     </>
   )
@@ -139,12 +140,7 @@ function FilterChip({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={cn(
-        'label-caps border px-3 py-1.5 transition-colors',
-        active
-          ? 'border-brass bg-brass/10 text-ink'
-          : 'border-rule text-ink-soft hover:border-brass hover:text-ink',
-      )}
+      className={cn('chip', active && 'chip-active')}
     >
       {children}
       <span className="numerals text-ink-faint ms-1.5">{count}</span>

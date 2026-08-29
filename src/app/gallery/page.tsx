@@ -3,7 +3,8 @@ import { assetExists } from '@/lib/assets'
 import { getAll, getById, loadVocab, placeById } from '@/lib/content'
 import { formatDate } from '@/lib/utils/format'
 import { Container } from '@/components/primitives/Container'
-import { PlaceholderNotice } from '@/components/primitives/PlaceholderNotice'
+import { SectionHeading } from '@/components/primitives/SectionHeading'
+import { EmptyState } from '@/components/primitives/EmptyState'
 import { GalleryWall, type Filter, type GalleryPhoto } from '@/components/gallery/GalleryWall'
 
 export const metadata: Metadata = { title: 'גלריה' }
@@ -54,9 +55,14 @@ export default function GalleryPage() {
   return (
     <Container width="wide" className="py-20 lg:py-28">
       <header className="mb-12">
-        <p className="label-caps text-brass">אוסף</p>
-        <h1 className="font-display mt-3 text-4xl sm:text-5xl">גלריה</h1>
-        <p className="text-ink-soft mt-5 max-w-[38rem]">
+        <SectionHeading
+          eyebrow="אוסף"
+          title="גלריה"
+          glyph="gallery"
+          as="h1"
+          index={photos.length}
+        />
+        <p className="text-ink-soft mt-6 max-w-[38rem] leading-relaxed">
           תצלומים מן הארכיון. לכל תצלום כיתוב מלא — תאריך, מקום, מי מופיע בו ומקורו. אנשים המזוהים
           בתמונה מקושרים לדף האישיות שלהם.
         </p>
@@ -70,7 +76,7 @@ export default function GalleryPage() {
       </header>
 
       {photos.length === 0 ? (
-        <PlaceholderNotice>האוסף ריק — טרם הוזנו תמונות</PlaceholderNotice>
+        <EmptyState glyph="gallery" title="אולם שממתין לתצלומים" note="טרם הוזנו תמונות לאוסף." />
       ) : (
         <GalleryWall photos={photos} filters={filters} />
       )}

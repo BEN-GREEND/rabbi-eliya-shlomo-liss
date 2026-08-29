@@ -10,13 +10,12 @@ import { PeopleAlongTheWay } from '@/components/home/PeopleAlongTheWay'
 import { MemorialInvitation } from '@/components/home/MemorialInvitation'
 
 /**
- * The home page is the entrance to the exhibition.
+ * The entrance to the exhibition.
  *
- * Every section reads from the content collections. Nothing here is written
- * into the page: where content has not been supplied the section says so
- * plainly and collapses to a single line, and it opens on its own the moment
- * real items exist. No invented dates, names, roles or quotations appear
- * anywhere, and no stand-in imagery is generated.
+ * Every section reads from the content collections; nothing here is written
+ * into the page. Grounds alternate between paper and stone so the page has
+ * bands rather than one flat sheet, and the archive band sits on the deep
+ * ground — the one lit case in a dim room.
  */
 export default function HomePage() {
   return (

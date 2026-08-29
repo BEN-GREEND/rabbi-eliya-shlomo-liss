@@ -1,67 +1,86 @@
 import { getReal } from '@/lib/content'
 import { getSite } from '@/lib/site'
 import { Container } from '@/components/primitives/Container'
-import { PlaceholderNotice } from '@/components/primitives/PlaceholderNotice'
-import { YearMark } from '@/components/primitives/YearMark'
+import { ButtonLink } from '@/components/primitives/Button'
 import { Portrait } from './Portrait'
 
 /**
  * The opening composition.
  *
- * Asymmetric on purpose: the name occupies the leading two thirds at
- * exhibition scale, the portrait plate sits lower and narrower on the
- * trailing side, and a brass hairline ties them together. Not an image with
- * a headline on top of it.
+ * A stone ground rather than plain paper, so the page starts with weight. The
+ * name is set at the largest size on the site and broken across three lines,
+ * with a wine rule and the life years beneath it, and the portrait plate sits
+ * lower and narrower on the trailing side.
  *
- * The oversized year appears only when real dated content exists. Right now
- * none does, so nothing is shown — the site never invents a date to decorate
- * with.
+ * The earliest recorded year stands behind the text column at exhibition scale
+ * — inside that column, not across the whole section, so the whole numeral is
+ * readable rather than half-hidden behind the plate.
+ *
+ * Two actions, ranked: into the life, or into the archive.
  */
 export function Hero() {
   const site = getSite()
 
-  const datedYears = getReal('timeline')
+  const years = getReal('timeline')
     .map((item) => (item.data as { year?: number }).year)
     .filter((y): y is number => typeof y === 'number')
-  const earliestYear = datedYears.length ? Math.min(...datedYears) : null
+  const earliest = years.length ? Math.min(...years) : null
 
   return (
-    <section className="paper-grain border-rule relative overflow-hidden border-b">
-      {earliestYear !== null && (
-        <div className="pointer-events-none absolute inset-x-0 -bottom-12 -z-10 hidden justify-center lg:flex">
-          <YearMark year={earliestYear} size="xl" />
-        </div>
-      )}
-
-      <Container width="wide" className="pt-20 pb-20 lg:pt-32 lg:pb-28">
+    <section className="paper-grain from-stone via-paper-deep to-paper relative isolate overflow-hidden bg-gradient-to-b">
+      <Container width="wide" className="pt-20 pb-24 lg:pt-28 lg:pb-32">
         <div className="grid items-center gap-x-16 gap-y-14 lg:grid-cols-12">
-          {/* Name — the leading side */}
-          <div className="lg:col-span-7">
-            <p className="label-caps text-brass">ארכיון · מורשת</p>
+          <div className="relative lg:col-span-7">
+            {earliest !== null && (
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-0 bottom-[-2.5rem] -z-10 hidden justify-center lg:flex"
+              >
+                <span
+                  dir="ltr"
+                  className="numerals font-display text-brass-line/[0.16] text-[13rem] leading-none font-light xl:text-[16rem]"
+                >
+                  {earliest}
+                </span>
+              </div>
+            )}
 
-            <h1 className="font-display mt-7 leading-[0.95]">
+            <p className="eyebrow flex items-center gap-3">
+              <span aria-hidden="true" className="bg-wine/60 h-px w-8" />
+              ארכיון · מורשת
+            </p>
+
+            <h1 className="font-display mt-7 leading-[0.92]">
               <span className="text-ink-soft block text-[1.75rem] font-light sm:text-3xl">הרב</span>
-              <span className="mt-2 block text-[3.25rem] sm:text-7xl lg:text-[5.5rem]">
+              <span className="mt-2.5 block text-[3.5rem] sm:text-7xl lg:text-[5.75rem]">
                 אליהו שלמה
               </span>
-              <span className="mt-1 block text-[3.25rem] sm:text-7xl lg:text-[5.5rem]">ליס</span>
+              <span className="mt-1 block text-[3.5rem] sm:text-7xl lg:text-[5.75rem]">ליס</span>
             </h1>
 
-            <div aria-hidden="true" className="bg-brass mt-9 h-px w-20" />
+            <div className="mt-8 flex items-center gap-5">
+              <span aria-hidden="true" className="bg-wine h-px w-16" />
+              <span dir="ltr" className="label-caps numerals text-wine">
+                1901–1963
+              </span>
+            </div>
 
-            <div className="mt-8 max-w-[34rem]">
-              {site.tagline ? (
-                <p className="font-display text-ink-soft text-xl leading-relaxed sm:text-2xl">
-                  {site.tagline}
-                </p>
-              ) : (
-                <PlaceholderNotice>שורת משנה — טרם הוזנה</PlaceholderNotice>
-              )}
+            {site.tagline && (
+              <p className="font-display text-ink-soft mt-8 max-w-[34rem] text-xl leading-relaxed sm:text-2xl">
+                {site.tagline}
+              </p>
+            )}
+
+            <div className="mt-10 flex flex-wrap gap-3">
+              <ButtonLink href="/timeline" variant="primary" arrow>
+                תולדות חייו
+              </ButtonLink>
+              <ButtonLink href="/archive" variant="secondary">
+                אל הארכיון
+              </ButtonLink>
             </div>
           </div>
 
-          {/* Narrower than its column and dropped below the name's baseline —
-              the asymmetry that keeps this from reading as a two-column header. */}
           <div className="lg:col-span-5 lg:translate-y-10">
             <div className="mx-auto max-w-[24rem] lg:me-0">
               <Portrait />

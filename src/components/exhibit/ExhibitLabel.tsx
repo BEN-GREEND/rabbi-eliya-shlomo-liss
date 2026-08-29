@@ -16,6 +16,7 @@ export function ExhibitLabel({
   credit,
   children,
   as: Tag = 'div',
+  titleAs: Title = 'h3',
   tone = 'light',
   className,
 }: {
@@ -26,6 +27,8 @@ export function ExhibitLabel({
   credit?: string
   children?: ReactNode
   as?: 'div' | 'figcaption' | 'header'
+  /** The heading level of the title. h3 by default; h2 in a list under an h1. */
+  titleAs?: 'h2' | 'h3'
   tone?: 'light' | 'deep'
   className?: string
 }) {
@@ -47,14 +50,14 @@ export function ExhibitLabel({
         </p>
       )}
 
-      <h3
+      <Title
         className={cn(
           'font-display text-xl leading-snug sm:text-2xl',
           deep ? 'text-paper' : 'text-ink',
         )}
       >
         {title}
-      </h3>
+      </Title>
 
       {facts.length > 0 && (
         <p className={cn('label-caps mt-2.5', deep && 'text-paper/70')}>

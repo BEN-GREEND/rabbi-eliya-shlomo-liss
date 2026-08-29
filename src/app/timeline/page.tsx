@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getAll, getById, getBySlug, getRelated, periodById, placeById } from '@/lib/content'
 import { formatDate } from '@/lib/utils/format'
 import { Container } from '@/components/primitives/Container'
+import { SectionHeading } from '@/components/primitives/SectionHeading'
 import { Prose } from '@/components/exhibit/Prose'
 import { Provenance, type SourceRef } from '@/components/exhibit/Provenance'
 import { Thread, type ThreadEvent } from '@/components/timeline/Thread'
@@ -55,8 +56,13 @@ export default function TimelinePage() {
   return (
     <>
       <Container width="wide" className="pt-20 lg:pt-28">
-        <p className="label-caps text-brass">תולדות חייו</p>
-        <h1 className="font-display mt-3 text-4xl sm:text-5xl lg:text-6xl">הרב אליהו שלמה ליס</h1>
+        <SectionHeading
+          eyebrow="תולדות חייו"
+          title="הרב אליהו שלמה ליס"
+          glyph="person"
+          as="h1"
+          className="[&_h1]:text-4xl sm:[&_h1]:text-5xl lg:[&_h1]:text-6xl"
+        />
         {biography && (
           <div className="mt-10">
             <Prose source={biography.body} />
@@ -70,7 +76,7 @@ export default function TimelinePage() {
       </Container>
 
       <Container width="wide" className="pt-20 pb-24 lg:pt-28">
-        <h2 className="label-caps text-brass border-rule mb-12 border-t pt-6">ציר הזמן</h2>
+        <SectionHeading eyebrow="חוט השנים" title="ציר הזמן" glyph="timeline" className="mb-14" />
         <Thread events={events} />
       </Container>
     </>

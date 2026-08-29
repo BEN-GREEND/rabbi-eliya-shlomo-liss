@@ -17,6 +17,8 @@ export function SelectedStations({ index }: { index: number }) {
   return (
     <HomeSection
       index={index}
+      glyph="timeline"
+      ground="paper"
       title="תחנות בחייו"
       eyebrow="ציר הזמן"
       href="/timeline"

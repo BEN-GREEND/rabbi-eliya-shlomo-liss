@@ -20,7 +20,14 @@ export function FromHisTorah({ index }: { index: number }) {
   ).slice(0, 3)
 
   return (
-    <HomeSection index={index} title="מתורתו" href="/torah" empty={items.length === 0}>
+    <HomeSection
+      index={index}
+      glyph="torah"
+      ground="stone"
+      title="מתורתו"
+      href="/torah"
+      empty={items.length === 0}
+    >
       <ul className="grid gap-x-12 gap-y-12 md:grid-cols-3">
         {items.map((item) => {
           const kind = KIND_LABELS[item.data.kind as string]

@@ -13,6 +13,8 @@ export function Voices({ index }: { index: number }) {
   return (
     <HomeSection
       index={index}
+      glyph="testimony"
+      ground="paper"
       title="קולות מהתערוכה"
       eyebrow="זכרונות ועדויות"
       href="/testimonies"

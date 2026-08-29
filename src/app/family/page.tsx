@@ -4,6 +4,7 @@ import { getById, getBySlug, getInverseRelations, type Item } from '@/lib/conten
 import { RELATION_LABELS } from '@/lib/content/references'
 import { lifeSpan } from '@/lib/utils/format'
 import { Container } from '@/components/primitives/Container'
+import { SectionHeading } from '@/components/primitives/SectionHeading'
 import { Numerals } from '@/components/primitives/Numerals'
 import { PlaceholderNotice } from '@/components/primitives/PlaceholderNotice'
 import { Prose } from '@/components/exhibit/Prose'
@@ -119,8 +120,7 @@ export default function FamilyPage() {
   return (
     <Container width="wide" className="pt-20 pb-20 lg:pt-28">
       <header className="mb-14">
-        <p className="label-caps text-brass">עמוד</p>
-        <h1 className="font-display mt-3 text-4xl sm:text-5xl">משפחתו והמשך דרכו</h1>
+        <SectionHeading eyebrow="עמוד" title="משפחתו והמשך דרכו" glyph="person" as="h1" />
       </header>
 
       <Section

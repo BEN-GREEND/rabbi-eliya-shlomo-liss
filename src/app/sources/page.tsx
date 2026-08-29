@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getAll } from '@/lib/content'
 import { Container } from '@/components/primitives/Container'
-import { PlaceholderNotice } from '@/components/primitives/PlaceholderNotice'
+import { EmptyState } from '@/components/primitives/EmptyState'
+import { SectionHeading } from '@/components/primitives/SectionHeading'
 
 export const metadata: Metadata = { title: 'מקורות' }
 
@@ -66,16 +67,21 @@ export default function SourcesPage() {
   return (
     <Container width="wide" className="py-20 lg:py-28">
       <header className="mb-14">
-        <p className="label-caps text-brass">אוסף</p>
-        <h1 className="font-display mt-3 text-4xl sm:text-5xl">מקורות</h1>
-        <p className="text-ink-soft mt-5 max-w-[38rem]">
+        <SectionHeading
+          eyebrow="אוסף"
+          title="מקורות"
+          glyph="source"
+          as="h1"
+          index={sources.length}
+        />
+        <p className="text-ink-soft mt-6 max-w-[38rem] leading-relaxed">
           כל עובדה באתר מפנה למקור שממנו הגיעה, ולרמת הקרבה שלו לאירועים. גם מקורות שאותרו אך טרם
           נקראו מופיעים כאן — לדעת מה עוד לא קראנו הוא חלק מן הארכיון.
         </p>
       </header>
 
       {sources.length === 0 ? (
-        <PlaceholderNotice>טרם הוזנו מקורות</PlaceholderNotice>
+        <EmptyState glyph="source" title="מדף שממתין למקורות" note="טרם הוזנו מקורות." />
       ) : (
         <div className="grid gap-x-14 gap-y-12 lg:grid-cols-2">
           <section aria-labelledby="read-heading">

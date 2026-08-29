@@ -1,7 +1,9 @@
 import { COLLECTION_LABELS, getAll, type Collection } from '@/lib/content'
 import { Container } from '@/components/primitives/Container'
-import { PlaceholderNotice } from '@/components/primitives/PlaceholderNotice'
+import { EmptyState } from '@/components/primitives/EmptyState'
 import { YearMark } from '@/components/primitives/YearMark'
+import { COLLECTION_GLYPH } from '@/components/primitives/Glyph'
+import { SectionHeading } from '@/components/primitives/SectionHeading'
 import { ExhibitCard } from './ExhibitCard'
 
 /**
@@ -32,17 +34,20 @@ export function CollectionIndex({
         <div className="pointer-events-none absolute end-0 -top-16 -z-10 hidden sm:block">
           <YearMark year={items.length} size="md" />
         </div>
-        <p className="label-caps text-brass">אוסף</p>
-        <Heading className="font-display mt-3 text-4xl sm:text-5xl">
-          {heading ?? COLLECTION_LABELS[collection]}
-        </Heading>
-        {intro && <p className="text-ink-soft mt-5 max-w-[38rem]">{intro}</p>}
+        <SectionHeading
+          as={Heading}
+          eyebrow="אוסף"
+          title={heading ?? COLLECTION_LABELS[collection]}
+          glyph={COLLECTION_GLYPH[collection]}
+          index={items.length || undefined}
+        />
+        {intro && <p className="text-ink-soft mt-6 max-w-[38rem] leading-relaxed">{intro}</p>}
       </header>
 
       {items.length === 0 ? (
-        <PlaceholderNotice>האוסף ריק — טרם הוזנו פריטים</PlaceholderNotice>
+        <EmptyState title="אולם שממתין למוצג" note="האוסף הזה טרם קיבל את פריטיו." />
       ) : (
-        <ul className="grid gap-x-12 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item, i) => (
             <li key={item.id}>
               <ExhibitCard item={item} index={i} />

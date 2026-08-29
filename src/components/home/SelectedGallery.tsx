@@ -33,7 +33,14 @@ export function SelectedGallery({ index }: { index: number }) {
   ).slice(0, 5)
 
   return (
-    <HomeSection index={index} title="גלריה נבחרת" href="/gallery" empty={items.length === 0}>
+    <HomeSection
+      index={index}
+      glyph="gallery"
+      ground="stone"
+      title="גלריה נבחרת"
+      href="/gallery"
+      empty={items.length === 0}
+    >
       <ul className="grid gap-6 sm:grid-cols-6">
         {items.map((item) => {
           const d = item.data as Record<string, unknown>

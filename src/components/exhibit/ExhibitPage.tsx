@@ -22,6 +22,8 @@ import {
 } from '@/lib/doc-types'
 import { dateTimeAttr, formatDate } from '@/lib/utils/format'
 import { Container } from '@/components/primitives/Container'
+import { EmptyState } from '@/components/primitives/EmptyState'
+import { Glyph, COLLECTION_GLYPH } from '@/components/primitives/Glyph'
 import { Numerals } from '@/components/primitives/Numerals'
 import { PlaceholderNotice } from '@/components/primitives/PlaceholderNotice'
 import { Rule } from '@/components/primitives/Rule'
@@ -61,25 +63,37 @@ export function ExhibitPage({ collection, slug }: { collection: Collection; slug
             </div>
           )}
 
-          <p className="label-caps numerals text-brass">
-            {COLLECTION_LABELS[collection]} · מוצג {catalogNumber(collection, index)}
-          </p>
+          {/* The wall label: what room you are in, and the object's number. */}
+          <div className="mb-5 flex items-center gap-3">
+            <Glyph
+              name={COLLECTION_GLYPH[collection] ?? 'archive'}
+              className="text-brass h-4 w-4"
+            />
+            <p className="eyebrow">{COLLECTION_LABELS[collection]}</p>
+            <span aria-hidden="true" className="bg-rule h-px flex-1" />
+            <p className="label-caps numerals text-brass">
+              מוצג {catalogNumber(collection, index)}
+            </p>
+          </div>
 
-          <h1 className="font-display mt-4 max-w-[24ch] text-4xl leading-tight sm:text-5xl">
+          <h1 className="font-display max-w-[24ch] text-4xl leading-[1.15] sm:text-5xl lg:text-[3.5rem]">
             {item.title}
           </h1>
 
           {date ? (
-            <p className="label-caps mt-5">
-              <time dateTime={dateTimeAttr(d)}>
+            <p className="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <time
+                dateTime={dateTimeAttr(d)}
+                className="font-display text-wine numerals text-xl leading-none font-medium"
+              >
                 <Numerals>{date}</Numerals>
               </time>
               {typeof d.hebrewDate === 'string' && d.hebrewDate && (
-                <span className="text-ink-faint ms-2">· {d.hebrewDate}</span>
+                <span className="label-caps text-ink-faint">{d.hebrewDate}</span>
               )}
             </p>
           ) : d.undated === true ? (
-            <p className="label-caps text-ink-faint mt-5">תקופה לא מתוארכת</p>
+            <p className="label-caps text-ink-faint mt-6">תקופה לא מתוארכת</p>
           ) : null}
 
           {typeof d.subtitle === 'string' && d.subtitle && (
@@ -89,7 +103,7 @@ export function ExhibitPage({ collection, slug }: { collection: Collection; slug
           )}
 
           {typeof d.summary === 'string' && d.summary && (
-            <p className="font-display text-ink-soft mt-6 max-w-[38rem] text-xl leading-relaxed">
+            <p className="font-display text-ink-soft border-brass-line/40 mt-7 max-w-[38rem] border-s-2 ps-5 text-xl leading-relaxed">
               {d.summary}
             </p>
           )}
@@ -149,9 +163,19 @@ function Lead({ collection, item }: { collection: Collection; item: Item }) {
   if (collection === 'gallery') {
     const image = d.image as { src: string; alt: string } | undefined
     const present = assetExists(image?.src)
+    if (!present || !image) {
+      return (
+        <EmptyState
+          glyph="gallery"
+          className="mt-10 aspect-3/2"
+          title={ASSET_STATUS_LABELS[(d.assetStatus as string) ?? 'awaited'] ?? 'הפריט טרם הועלה'}
+          note="מקום שממתין לתצלום."
+        />
+      )
+    }
     return (
-      <div className="border-rule bg-paper-deep relative mt-10 aspect-3/2 overflow-hidden border">
-        {present && image ? (
+      <figure className="bg-stone/50 border-paper-edge mt-10 border p-3 shadow-[var(--shadow-rest)] sm:p-5">
+        <div className="border-rule bg-deep/[0.04] relative aspect-3/2 overflow-hidden border">
           <Image
             src={image.src}
             alt={image.alt}
@@ -160,12 +184,8 @@ function Lead({ collection, item }: { collection: Collection; item: Item }) {
             sizes="(min-width: 1024px) 72rem, 100vw"
             className="object-contain"
           />
-        ) : (
-          <span className="label-caps text-ink-faint absolute inset-0 flex items-center justify-center">
-            {ASSET_STATUS_LABELS[(d.assetStatus as string) ?? 'awaited']}
-          </span>
-        )}
-      </div>
+        </div>
+      </figure>
     )
   }
 
@@ -180,33 +200,42 @@ function Lead({ collection, item }: { collection: Collection; item: Item }) {
     return (
       <div className="mt-10">
         {speaker && (
-          <div className="border-brass/30 border-s-2 ps-6">
-            <p className="font-display text-2xl leading-snug">
-              {narrator ? (
-                <Link
-                  href={narrator.url}
-                  className="hover:text-brass no-underline transition-colors"
-                >
-                  {speaker}
-                </Link>
-              ) : (
-                speaker
-              )}
-            </p>
-            {where && (
-              <p className="label-caps text-ink-faint mt-1.5">
-                <Numerals>{where}</Numerals>
+          <div className="border-wine-line/40 flex items-start gap-4 border-s-2 ps-6">
+            <div>
+              <p className="eyebrow mb-1.5">מפי</p>
+              <p className="font-display text-2xl leading-snug">
+                {narrator ? (
+                  <Link
+                    href={narrator.url}
+                    className="hover:text-wine underline-grow no-underline transition-colors"
+                  >
+                    {speaker}
+                  </Link>
+                ) : (
+                  speaker
+                )}
               </p>
-            )}
+              {where && (
+                <p className="label-caps text-ink-faint mt-1.5">
+                  <Numerals>{where}</Numerals>
+                </p>
+              )}
+            </div>
           </div>
         )}
 
         {typeof d.pullQuote === 'string' && d.pullQuote && (
-          <blockquote className="mt-10">
-            <p className="font-display text-ink max-w-[24ch] text-3xl leading-[1.35] sm:text-4xl">
-              „{d.pullQuote}”
+          <blockquote className="bg-stone/55 border-paper-edge paper-grain relative mt-10 border px-7 py-10 sm:px-12 sm:py-14">
+            <Glyph name="quote" className="text-brass-line/35 absolute start-6 top-5 h-9 w-9" />
+            <p className="font-display text-ink relative max-w-[26ch] text-3xl leading-[1.35] sm:text-[2.5rem] sm:leading-[1.3]">
+              {d.pullQuote}
             </p>
-            {speaker && <footer className="label-caps text-ink-faint mt-5">— {speaker}</footer>}
+            {speaker && (
+              <footer className="mt-7 flex items-center gap-3">
+                <span aria-hidden="true" className="bg-wine-line/50 h-px w-8" />
+                <span className="label-caps text-ink-soft">{speaker}</span>
+              </footer>
+            )}
           </blockquote>
         )}
       </div>
@@ -217,16 +246,18 @@ function Lead({ collection, item }: { collection: Collection; item: Item }) {
     const preview = d.preview as { src: string; alt: string } | undefined
     if (!assetExists(preview?.src) || !preview) return null
     return (
-      <div className="border-rule bg-paper-deep relative mt-10 aspect-4/3 overflow-hidden border">
-        <Image
-          src={preview.src}
-          alt={preview.alt}
-          fill
-          priority
-          sizes="(min-width: 1024px) 48rem, 100vw"
-          className="object-contain"
-        />
-      </div>
+      <figure className="bg-stone/50 border-paper-edge mt-10 border p-3 shadow-[var(--shadow-rest)] sm:p-5">
+        <div className="border-rule bg-deep/[0.04] relative aspect-4/3 overflow-hidden border">
+          <Image
+            src={preview.src}
+            alt={preview.alt}
+            fill
+            priority
+            sizes="(min-width: 1024px) 48rem, 100vw"
+            className="object-contain"
+          />
+        </div>
+      </figure>
     )
   }
 
@@ -274,11 +305,11 @@ function Facts({ collection, d }: { collection: Collection; d: Data }) {
   if (!visible.length) return null
 
   return (
-    <dl className="mb-12 grid gap-x-10 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+    <dl className="bg-stone/45 border-paper-edge mb-12 grid gap-x-10 gap-y-5 border px-6 py-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] sm:grid-cols-2 sm:px-8 sm:py-7 lg:grid-cols-3">
       {visible.map(([label, value]) => (
         <div key={label}>
           <dt className="label-caps text-ink-faint">{label}</dt>
-          <dd className="mt-1 text-[0.95rem]">{value}</dd>
+          <dd className="mt-1 text-[0.95rem] leading-snug">{value}</dd>
         </div>
       ))}
     </dl>
@@ -308,10 +339,11 @@ function Transcription({ d }: { d: Data }) {
   return (
     <section className="mt-12" aria-labelledby="transcription-heading">
       <Rule />
-      <h2 id="transcription-heading" className="label-caps text-brass mt-6">
+      <h2 id="transcription-heading" className="eyebrow mt-6 flex items-center gap-2.5">
+        <Glyph name="archive" className="text-brass h-4 w-4" />
         תמלול
       </h2>
-      <div className="bg-paper-deep/40 border-brass/25 mt-5 border-s-2 px-6 py-5">
+      <div className="bg-stone/45 border-brass-line/50 mt-5 border-s-2 px-6 py-5">
         <p className="max-w-[38rem] leading-[1.9] whitespace-pre-line">{text}</p>
       </div>
     </section>
@@ -331,7 +363,8 @@ function DocumentFiles({ d }: { d: Data }) {
   return (
     <p className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
       {files.map(([label, href]) => (
-        <Link key={href} href={href} className="label-caps border-brass border-b pb-1 no-underline">
+        <Link key={href} href={href} className="btn-base btn-secondary">
+          <Glyph name="archive" className="h-4 w-4" />
           {label}
         </Link>
       ))}

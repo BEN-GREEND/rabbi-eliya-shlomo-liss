@@ -3,7 +3,9 @@
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Glyph } from '@/components/primitives/Glyph'
 import { cn } from '@/lib/utils/cn'
+import { EmptyState } from '@/components/primitives/EmptyState'
 
 export interface ArchiveDoc {
   id: string
@@ -34,14 +36,23 @@ export interface Drawer {
  * but not scanned" is not "we do not know if it survived", and neither is
  * "gone".
  */
-const STATUS: Record<string, { label: string; tone: 'held' | 'pending' | 'absent' }> = {
-  present: { label: 'זמין לעיון', tone: 'held' },
-  'not-digitized': { label: 'קיים — טרם נסרק', tone: 'held' },
-  'private-archive': { label: 'בארכיון משפחתי פרטי', tone: 'held' },
-  awaited: { label: 'טרם הועלה', tone: 'pending' },
-  located: { label: 'אותר — טרם הושג', tone: 'pending' },
-  sought: { label: 'טרם אותר', tone: 'pending' },
-  lost: { label: 'אבד', tone: 'absent' },
+const STATUS: Record<string, { label: string; className: string }> = {
+  // Held: brass, the colour of things the archive has.
+  present: { label: 'זמין לעיון', className: 'border-brass/40 text-brass bg-brass/[0.07]' },
+  'not-digitized': {
+    label: 'קיים — טרם נסרק',
+    className: 'border-brass/40 text-brass bg-brass/[0.07]',
+  },
+  'private-archive': {
+    label: 'בארכיון משפחתי פרטי',
+    className: 'border-brass/40 text-brass bg-brass/[0.07]',
+  },
+  // Outstanding: quiet, on the hairline.
+  awaited: { label: 'טרם הועלה', className: 'border-rule text-ink-faint' },
+  located: { label: 'אותר — טרם הושג', className: 'border-rule text-ink-faint' },
+  sought: { label: 'טרם אותר', className: 'border-rule text-ink-faint' },
+  // Gone: wine, and said once, plainly.
+  lost: { label: 'אבד', className: 'border-wine-line/40 text-wine bg-wine/[0.05]' },
 }
 
 /** Small, fixed tilts. A drawer of papers, not a carousel. */
@@ -82,7 +93,7 @@ export function ArchiveTable({ docs, drawers }: { docs: ArchiveDoc[]; drawers: D
       </div>
 
       {/* The table surface. */}
-      <div className="paper-grain bg-paper-deep/40 border-rule border px-5 py-10 sm:px-10 sm:py-14">
+      <div className="paper-grain bg-stone/45 border-rule relative border px-5 py-10 shadow-[inset_0_1px_3px_rgba(18,22,31,0.05)] sm:px-10 sm:py-14">
         <ul
           aria-live="polite"
           className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-12 lg:gap-y-16"
@@ -99,26 +110,28 @@ export function ArchiveTable({ docs, drawers }: { docs: ArchiveDoc[]; drawers: D
                   <article
                     className={cn(
                       'bg-paper border-rule relative border p-5 sm:p-6',
-                      'ease-exhibit shadow-[0_1px_2px_rgba(20,25,34,0.06),0_8px_18px_-12px_rgba(20,25,34,0.25)]',
-                      'transition-[transform,box-shadow] duration-500',
-                      'rotate-[var(--tilt)] group-hover:-translate-y-1 group-hover:rotate-0',
-                      'group-hover:shadow-[0_2px_4px_rgba(20,25,34,0.08),0_18px_36px_-18px_rgba(20,25,34,0.35)]',
+                      'ease-exhibit shadow-[var(--shadow-rest)]',
+                      'transition-[transform,box-shadow,border-color] duration-500',
+                      'rotate-[var(--tilt)] group-hover:-translate-y-1.5 group-hover:rotate-0',
+                      'group-hover:border-brass-line group-hover:shadow-[var(--shadow-lift)]',
                       'group-focus-visible:rotate-0',
                       doc.assetStatus === 'lost' && 'opacity-70',
                     )}
                   >
-                    <p className="label-caps text-brass flex items-baseline justify-between gap-3">
-                      <span>{doc.docTypeLabel}</span>
+                    <div className="flex items-start justify-between gap-3">
+                      <span className="label-caps text-brass flex items-center gap-2">
+                        <Glyph name="archive" className="h-4 w-4" />
+                        {doc.docTypeLabel}
+                      </span>
                       <span
                         className={cn(
-                          status.tone === 'held' && 'text-ink-faint',
-                          status.tone === 'pending' && 'text-ink-faint',
-                          status.tone === 'absent' && 'text-ink-faint italic',
+                          'label-caps shrink-0 border px-2 py-1 text-[0.625rem]',
+                          status.className,
                         )}
                       >
                         {status.label}
                       </span>
-                    </p>
+                    </div>
 
                     <div
                       className={cn(
@@ -140,9 +153,9 @@ export function ArchiveTable({ docs, drawers }: { docs: ArchiveDoc[]; drawers: D
                       )}
                     </div>
 
-                    <h3 className="font-display group-hover:text-brass mt-4 text-xl leading-snug transition-colors">
+                    <h2 className="font-display group-hover:text-wine mt-4 text-xl leading-snug transition-colors">
                       {doc.title}
-                    </h3>
+                    </h2>
 
                     {doc.date && (
                       <p className="label-caps text-ink-faint mt-1.5">
@@ -171,7 +184,11 @@ export function ArchiveTable({ docs, drawers }: { docs: ArchiveDoc[]; drawers: D
         </ul>
 
         {shown.length === 0 && (
-          <p className="label-caps text-ink-faint py-10 text-center">אין מסמכים במגירה זו</p>
+          <EmptyState
+            glyph="archive"
+            title="מגירה שממתינה למסמך"
+            note="במגירה זו טרם נוספו מסמכים. כל פריט שיאותר ייכנס לכאן."
+          />
         )}
       </div>
     </>
@@ -225,12 +242,7 @@ function Chip({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={cn(
-        'label-caps border px-3 py-1.5 transition-colors',
-        active
-          ? 'border-brass bg-brass/10 text-ink'
-          : 'border-rule text-ink-soft hover:border-brass hover:text-ink',
-      )}
+      className={cn('chip', active && 'chip-active')}
     >
       {children}
       <span className="numerals text-ink-faint ms-1.5">{count}</span>

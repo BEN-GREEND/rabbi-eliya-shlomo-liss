@@ -3,7 +3,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Glyph } from '@/components/primitives/Glyph'
 import { cn } from '@/lib/utils/cn'
+import { EmptyState } from '@/components/primitives/EmptyState'
 
 export interface GalleryPerson {
   id: string
@@ -107,10 +109,10 @@ export function GalleryWall({ photos, filters }: { photos: GalleryPhoto[]; filte
           <li key={photo.id} className={cn(SPAN[photo.emphasis] ?? SPAN.medium)}>
             <figure>
               <PlateButton photo={photo} onOpen={() => setOpenIndex(i)} />
-              <figcaption className="border-rule mt-3 border-s ps-3">
+              <figcaption className="border-rule group-hover:border-brass mt-4 border-s-2 ps-4 transition-colors">
                 <Link
                   href={photo.url}
-                  className="font-display hover:text-brass block leading-snug no-underline transition-colors"
+                  className="font-display hover:text-wine block text-lg leading-snug no-underline transition-colors"
                 >
                   {photo.title}
                 </Link>
@@ -144,7 +146,11 @@ export function GalleryWall({ photos, filters }: { photos: GalleryPhoto[]; filte
       </ul>
 
       {shown.length === 0 && (
-        <p className="label-caps text-ink-faint py-10 text-center">אין תמונות בקטגוריה זו</p>
+        <EmptyState
+          glyph="gallery"
+          title="מקום שממתין לתצלום"
+          note="בקטגוריה זו טרם נוספו תמונות. כשיימצאו — כאן הן ייתלו."
+        />
       )}
 
       {openIndex !== null && shown[openIndex] && (
@@ -165,6 +171,8 @@ function PlateButton({ photo, onOpen }: { photo: GalleryPhoto; onOpen: () => voi
     <div
       className={cn(
         'border-rule bg-paper-deep relative overflow-hidden border',
+        'shadow-[var(--shadow-rest)] transition-[box-shadow,border-color] duration-500',
+        'group-hover:border-brass-line group-hover:shadow-[var(--shadow-lift)]',
         RATIO[photo.emphasis] ?? RATIO.medium,
       )}
     >
@@ -178,8 +186,11 @@ function PlateButton({ photo, onOpen }: { photo: GalleryPhoto; onOpen: () => voi
           className="ease-exhibit object-cover transition-transform duration-700 group-hover:scale-[1.02]"
         />
       ) : (
-        <span className="label-caps text-ink-faint absolute inset-0 flex items-center justify-center px-4 text-center">
-          {ASSET_NOTE[photo.assetStatus] ?? 'אינו זמין'}
+        <span className="absolute inset-0 flex flex-col items-center justify-center gap-2.5 px-4 text-center">
+          <Glyph name="gallery" className="text-brass-line/45 h-7 w-7" />
+          <span className="label-caps text-ink-soft">
+            {ASSET_NOTE[photo.assetStatus] ?? 'אינו זמין'}
+          </span>
         </span>
       )}
     </div>
@@ -369,12 +380,7 @@ function Chip({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={cn(
-        'label-caps border px-3 py-1.5 transition-colors',
-        active
-          ? 'border-brass bg-brass/10 text-ink'
-          : 'border-rule text-ink-soft hover:border-brass hover:text-ink',
-      )}
+      className={cn('chip', active && 'chip-active')}
     >
       {children}
       <span className="numerals text-ink-faint ms-1.5">{count}</span>

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { Candle } from './Candle'
+import { Button } from '@/components/primitives/Button'
 import { cn } from '@/lib/utils/cn'
 
 interface Status {
@@ -66,22 +67,40 @@ export function MemorialCandle() {
   const canLight = status !== null && !status.hasLitRecently && !justLit
 
   return (
-    <div className="flex flex-col items-center">
-      <div className={cn('w-[7.5rem] sm:w-[9rem]', justLit && 'candle-kindle')}>
+    <div className="relative flex flex-col items-center">
+      {/* The light in the room. It sits behind the candle and brightens once a
+          flame is burning, so the page itself responds to the act. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-[-4rem] left-1/2 -z-10 h-[26rem] w-[26rem] -translate-x-1/2 transition-opacity duration-[1400ms]"
+        style={{
+          opacity: lit ? 1 : 0.45,
+          background:
+            'radial-gradient(circle at center, rgba(226,182,96,0.22) 0%, rgba(226,182,96,0.08) 38%, transparent 70%)',
+        }}
+      />
+
+      <div className={cn('w-[9rem] sm:w-[11rem]', justLit && 'candle-kindle')}>
         <Candle lit={lit} />
       </div>
 
-      <div aria-live="polite" className="mt-12 text-center">
+      <div aria-live="polite" className="mt-14 text-center">
         {status === null ? (
           <p className="label-caps text-ink-faint">{failed ? '' : '…'}</p>
         ) : (
-          <p className="label-caps text-ink-soft">
-            עד היום הודלקו לזכרו{' '}
-            <span dir="ltr" className="numerals text-brass inline-block font-semibold">
-              {status.count.toLocaleString('he-IL')}
-            </span>{' '}
-            {status.count === 1 ? 'נר' : 'נרות'}
-          </p>
+          <>
+            <p className="eyebrow">עד היום הודלקו לזכרו</p>
+            <p className="mt-3 flex items-baseline justify-center gap-3">
+              <span
+                dir="ltr"
+                className="font-display text-wine numerals text-5xl leading-none font-light sm:text-6xl"
+              >
+                {status.count.toLocaleString('he-IL')}
+              </span>
+              <span className="label-caps text-ink-soft">{status.count === 1 ? 'נר' : 'נרות'}</span>
+            </p>
+            <span aria-hidden="true" className="bg-wine-line/35 mx-auto mt-6 block h-px w-20" />
+          </>
         )}
 
         {justLit && <p className="font-display text-ink mt-6 text-xl">נר נוסף הודלק לזכרו</p>}
@@ -92,18 +111,15 @@ export function MemorialCandle() {
       </div>
 
       {canLight && (
-        <button
+        <Button
           type="button"
+          variant="memorial"
           onClick={light}
           disabled={busy}
-          className={cn(
-            'label-caps border-brass mt-10 border px-6 py-3 transition-colors',
-            'hover:bg-brass/10 focus-visible:bg-brass/10',
-            busy && 'opacity-60',
-          )}
+          className={cn('mt-10 px-8 py-4', busy && 'opacity-60')}
         >
           {busy ? 'מדליק…' : 'הדלקת נר לזכרו'}
-        </button>
+        </Button>
       )}
 
       {failed && (

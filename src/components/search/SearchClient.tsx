@@ -5,6 +5,8 @@ import Link from 'next/link'
 import MiniSearch from 'minisearch'
 import { normalizeHebrew, tokenizeHebrew } from '@/lib/utils/hebrew'
 import { cn } from '@/lib/utils/cn'
+import { COLLECTION_GLYPH, Glyph } from '@/components/primitives/Glyph'
+import { EmptyState } from '@/components/primitives/EmptyState'
 
 export interface SearchDoc {
   id: string
@@ -104,8 +106,9 @@ export function SearchClient({ initialQuery = '' }: { initialQuery?: string }) {
 
   return (
     <>
-      <div className="border-rule border-y py-6">
-        <label htmlFor="q" className="label-caps text-brass">
+      <div className="bg-stone/45 border-paper-edge focus-within:border-brass-line border px-6 py-6 transition-colors sm:px-8">
+        <label htmlFor="q" className="eyebrow flex items-center gap-2.5">
+          <Glyph name="search" className="text-brass h-4 w-4" />
           חיפוש בארכיון
         </label>
         <input
@@ -122,28 +125,42 @@ export function SearchClient({ initialQuery = '' }: { initialQuery?: string }) {
 
       <div aria-live="polite" className="min-h-[3rem]">
         {query.trim() && (
-          <p className="label-caps text-ink-faint py-6">
+          <p className="label-caps numerals text-ink-faint py-6">
             {loading ? 'טוען את האינדקס…' : total === 0 ? 'לא נמצאו תוצאות' : `${total} תוצאות`}
           </p>
         )}
       </div>
 
+      {query.trim() && !loading && total === 0 && (
+        <EmptyState
+          glyph="search"
+          className="mb-10"
+          title="החיפוש לא מצא מוצג"
+          note="נסו שם, מקום או שנה. הארכיון עדיין נבנה, ולא כל פריט הוזן."
+        />
+      )}
+
       {grouped.map(({ collection, hits }) => (
         <section key={collection} className="border-rule border-t py-8">
-          <h2 className="label-caps text-brass mb-5">
-            {GROUP_LABELS[collection] ?? collection}
-            <span className="numerals text-ink-faint ms-2">{hits.length}</span>
+          <h2 className="mb-5 flex items-center gap-2.5">
+            <Glyph
+              name={COLLECTION_GLYPH[collection] ?? 'archive'}
+              className="text-brass h-4 w-4"
+            />
+            <span className="eyebrow">{GROUP_LABELS[collection] ?? collection}</span>
+            <span className="label-caps numerals text-ink-faint">{hits.length}</span>
+            <span aria-hidden="true" className="bg-rule h-px flex-1" />
           </h2>
-          <ul className="grid gap-x-12 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {hits.map((hit) => (
               <li key={hit.id}>
                 <Link
                   href={hit.url}
                   className={cn(
-                    'group border-rule hover:border-brass block border-s ps-4 no-underline transition-colors',
+                    'group surface-card hover:surface-card-hover block h-full px-5 py-4 no-underline',
                   )}
                 >
-                  <span className="font-display group-hover:text-brass block text-lg leading-snug transition-colors">
+                  <span className="font-display group-hover:text-wine block text-lg leading-snug transition-colors">
                     {hit.title}
                   </span>
                   {hit.subtitle && (
@@ -152,8 +169,8 @@ export function SearchClient({ initialQuery = '' }: { initialQuery?: string }) {
                     </span>
                   )}
                   {typeof hit.count === 'number' && hit.count > 0 && (
-                    <span className="label-caps numerals text-brass mt-1 block">
-                      {hit.count} מוצגים קשורים
+                    <span className="label-caps numerals text-brass mt-2 block">
+                      {hit.count === 1 ? 'מוצג קשור אחד' : `${hit.count} מוצגים קשורים`}
                     </span>
                   )}
                 </Link>

@@ -3,7 +3,8 @@ import { assetExists } from '@/lib/assets'
 import { countPersonItems, getAll, loadVocab } from '@/lib/content'
 import { lifeSpan } from '@/lib/utils/format'
 import { Container } from '@/components/primitives/Container'
-import { PlaceholderNotice } from '@/components/primitives/PlaceholderNotice'
+import { EmptyState } from '@/components/primitives/EmptyState'
+import { SectionHeading } from '@/components/primitives/SectionHeading'
 import {
   PeopleGallery,
   type CategoryOption,
@@ -43,16 +44,15 @@ export default function PeoplePage() {
   return (
     <Container width="wide" className="py-20 lg:py-28">
       <header className="mb-12">
-        <p className="label-caps text-brass">אוסף</p>
-        <h1 className="font-display mt-3 text-4xl sm:text-5xl">אישים</h1>
-        <p className="text-ink-soft mt-5 max-w-[38rem]">
+        <SectionHeading eyebrow="אוסף" title="אישים" glyph="person" as="h1" index={people.length} />
+        <p className="text-ink-soft mt-6 max-w-[38rem] leading-relaxed">
           כל אדם מוגדר פעם אחת. המוצגים הקשורים אליו נאספים מעצמם מכל רחבי האתר — תמונות, מסמכים,
           אירועים, עדויות ודברי תורה.
         </p>
       </header>
 
       {people.length === 0 ? (
-        <PlaceholderNotice>טרם הוזנו אישים</PlaceholderNotice>
+        <EmptyState glyph="person" title="אולם שממתין לדמויות" note="טרם הוזנו אישים." />
       ) : (
         <PeopleGallery people={people} categories={categories} />
       )}
