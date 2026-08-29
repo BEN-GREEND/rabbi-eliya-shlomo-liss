@@ -91,6 +91,16 @@ export function Provenance({
                     {item.title}
                   </Link>
                   <span className="label-caps text-ink-faint ms-2">{facts.join(' · ')}</span>
+                  {sd.publicSource === true && typeof sd.url === 'string' && (
+                    <a
+                      href={sd.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="label-caps text-brass ms-2 no-underline hover:underline"
+                    >
+                      למקור המקוון ↗
+                    </a>
+                  )}
                   {ref.note && <p className="text-ink-soft mt-0.5">{ref.note}</p>}
                 </li>
               )

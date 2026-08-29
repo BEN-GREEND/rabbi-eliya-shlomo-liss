@@ -7,6 +7,7 @@ import {
   categoryById,
   COLLECTION_LABELS,
   getAll,
+  getById,
   getBySlug,
   periodById,
   placeById,
@@ -80,6 +81,12 @@ export function ExhibitPage({ collection, slug }: { collection: Collection; slug
           ) : d.undated === true ? (
             <p className="label-caps text-ink-faint mt-5">תקופה לא מתוארכת</p>
           ) : null}
+
+          {typeof d.subtitle === 'string' && d.subtitle && (
+            <p className="text-ink-soft mt-4 max-w-[46ch] text-[1.05rem] leading-relaxed">
+              {d.subtitle}
+            </p>
+          )}
 
           {typeof d.summary === 'string' && d.summary && (
             <p className="font-display text-ink-soft mt-6 max-w-[38rem] text-xl leading-relaxed">
@@ -162,13 +169,47 @@ function Lead({ collection, item }: { collection: Collection; item: Item }) {
     )
   }
 
-  if (collection === 'testimonies' && typeof d.pullQuote === 'string' && d.pullQuote) {
+  if (collection === 'testimonies') {
+    const narrator = typeof d.narrator === 'string' ? getById(d.narrator) : undefined
+    const nd = narrator?.data as { displayName?: string; name?: string } | undefined
+    const speaker = nd?.displayName || nd?.name || (d.narratorName as string | undefined)
+    const where = [d.location as string | undefined, formatDate(d)].filter(Boolean).join(' · ')
+
+    if (!speaker && !d.pullQuote) return null
+
     return (
-      <blockquote className="border-brass/40 mt-10 border-s-2 ps-6">
-        <p className="font-display text-ink max-w-[34ch] text-2xl leading-relaxed sm:text-3xl">
-          „{d.pullQuote}”
-        </p>
-      </blockquote>
+      <div className="mt-10">
+        {speaker && (
+          <div className="border-brass/30 border-s-2 ps-6">
+            <p className="font-display text-2xl leading-snug">
+              {narrator ? (
+                <Link
+                  href={narrator.url}
+                  className="hover:text-brass no-underline transition-colors"
+                >
+                  {speaker}
+                </Link>
+              ) : (
+                speaker
+              )}
+            </p>
+            {where && (
+              <p className="label-caps text-ink-faint mt-1.5">
+                <Numerals>{where}</Numerals>
+              </p>
+            )}
+          </div>
+        )}
+
+        {typeof d.pullQuote === 'string' && d.pullQuote && (
+          <blockquote className="mt-10">
+            <p className="font-display text-ink max-w-[24ch] text-3xl leading-[1.35] sm:text-4xl">
+              „{d.pullQuote}”
+            </p>
+            {speaker && <footer className="label-caps text-ink-faint mt-5">— {speaker}</footer>}
+          </blockquote>
+        )}
+      </div>
     )
   }
 

@@ -85,6 +85,8 @@ const base = {
   id: zId,
   slug: zSlug,
   title: z.string().min(1),
+  /** A second line under the title, where one clarifies what the item is about. */
+  subtitle: z.string().optional(),
   summary: z.string().optional(),
   /** Marks an item as scaffolding awaiting real content. Rendered with a notice. */
   placeholder: z.boolean().default(false),
@@ -194,6 +196,8 @@ export const schemas = {
     publishedDate: z.string().optional(),
     hebrewYear: z.string().optional(),
     url: z.string().optional(),
+    /** The url is publicly readable, so the site may link straight to it. */
+    publicSource: z.boolean().default(false),
     /** obtained = read in full. located = found but not yet read. sought = not found. */
     status: z.enum(['obtained', 'located', 'sought']).default('sought'),
     priority: z.enum(['very-high', 'high', 'normal']).optional(),
@@ -327,6 +331,8 @@ export const schemas = {
     narrator: zId.optional(),
     narratorName: z.string().optional(),
     narratorRelation: z.string().optional(),
+    /** Free-text place, alongside the controlled `places` vocabulary. */
+    location: z.string().optional(),
     pullQuote: z.string().optional(),
     topic: z.array(z.string()).default([]),
     image: zImage.optional(),
