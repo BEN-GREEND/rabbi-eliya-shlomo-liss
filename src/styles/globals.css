@@ -226,3 +226,88 @@
     transform: none;
   }
 }
+
+/* ==========================================================================
+   The memorial candle
+
+   Three loops of deliberately different lengths, so the motion never settles
+   into a visible repeat. Transforms and opacity only — nothing that forces
+   layout. The global prefers-reduced-motion rule stops all of them, and each
+   keyframe set is written so the frame it rests on is the correct one.
+   ========================================================================== */
+
+.candle-flame {
+  animation: candle-sway 2.7s ease-in-out infinite;
+}
+
+.candle-flame-core {
+  animation: candle-core 3.4s ease-in-out infinite;
+}
+
+.candle-glow {
+  /* Centring belongs here, not in a utility class: the keyframes below set
+     `transform`, and a Tailwind translate utility would stack with it rather
+     than replace it. */
+  left: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(226, 182, 96, 0.5) 0%,
+    rgba(226, 182, 96, 0.18) 42%,
+    transparent 72%
+  );
+  filter: blur(14px);
+  animation: candle-breathe 4.3s ease-in-out infinite;
+}
+
+@keyframes candle-sway {
+  0%,
+  100% {
+    transform: scaleY(1) skewX(0deg);
+  }
+  35% {
+    transform: scaleY(1.05) skewX(-1.4deg);
+  }
+  70% {
+    transform: scaleY(0.97) skewX(1.1deg);
+  }
+}
+
+@keyframes candle-core {
+  0%,
+  100% {
+    transform: scaleY(1) translateY(0);
+    opacity: 1;
+  }
+  45% {
+    transform: scaleY(1.09) translateY(-0.6px);
+    opacity: 0.92;
+  }
+}
+
+@keyframes candle-breathe {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.06);
+  }
+}
+
+/* Lighting: the flame arrives, it does not pop. */
+@keyframes candle-kindle {
+  from {
+    opacity: 0;
+    transform: scale(0.72) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.candle-kindle {
+  animation: candle-kindle 900ms var(--ease-exhibit) both;
+}
