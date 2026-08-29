@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import type { SupabaseClient } from '@supabase/supabase-js'
 import type { CandleStatus, CandleStore, LightResult } from './types'
 
 const TABLE = 'memorial_candles'
@@ -10,14 +10,7 @@ const TABLE = 'memorial_candles'
  * server only — the key never reaches the browser, and RLS denies the anon key
  * entirely, so there is no path to this table except through our route handler.
  */
-export function createSupabaseStore(
-  url: string,
-  serviceRoleKey: string,
-  cooldownHours: number,
-): CandleStore {
-  const db = createClient(url, serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  })
+export function createSupabaseStore(db: SupabaseClient, cooldownHours: number): CandleStore {
   const cooldownMs = cooldownHours * 60 * 60 * 1000
 
   async function count(): Promise<number> {

@@ -4,6 +4,7 @@ import { MEMORIAL_LINK } from '@/lib/nav'
 import { getSite } from '@/lib/site'
 import { Container } from '@/components/primitives/Container'
 import { CandleGlyph } from './CandleGlyph'
+import { VisitorCount } from './VisitorCount'
 
 export function Footer() {
   const site = getSite()
@@ -47,9 +48,12 @@ export function Footer() {
           </div>
         </div>
 
-        <p className="label-caps border-rule-deep text-paper/55 mt-16 border-t pt-8">
-          אתר מורשת · כל הזכויות שמורות
-        </p>
+        <div className="border-rule-deep mt-16 flex flex-wrap items-center gap-x-6 gap-y-2 border-t pt-8">
+          <p className="label-caps text-paper/55">אתר מורשת · כל הזכויות שמורות</p>
+          <span className="ms-auto">
+            <VisitorCount />
+          </span>
+        </div>
       </Container>
     </footer>
   )
