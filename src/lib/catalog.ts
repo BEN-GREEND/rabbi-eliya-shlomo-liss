@@ -16,6 +16,7 @@ const COLLECTION_LETTER: Record<Collection, string> = {
   activities: 'ו',
   people: 'ז',
   sources: 'ח',
+  pages: 'ט',
 }
 
 export function catalogNumber(collection: Collection, index: number): string {

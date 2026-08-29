@@ -145,6 +145,12 @@ export const INVERSE_RELATION: Record<string, string> = {
   'father-in-law': 'son-in-law',
   'brother-in-law': 'brother-in-law',
   'sister-in-law': 'sister-in-law',
+  'daughter-in-law': 'father-in-law',
+  'mother-in-law': 'daughter-in-law',
+  grandson: 'grandparent',
+  granddaughter: 'grandparent',
+  grandchild: 'grandparent',
+  grandparent: 'grandchild',
   teacher: 'student',
   student: 'teacher',
   colleague: 'colleague',
@@ -173,6 +179,12 @@ export const RELATION_LABELS: Record<string, string> = {
   child: 'בנו/בתו',
   parent: 'הורהו',
   sibling: 'אחיו/אחותו',
+  'daughter-in-law': 'כלתו',
+  'mother-in-law': 'חמותו',
+  grandson: 'נכדו',
+  granddaughter: 'נכדתו',
+  grandchild: 'נכדו/נכדתו',
+  grandparent: 'סבו',
 }
 
 /** Hebrew labels for the roles above, used as headings on a person page. */

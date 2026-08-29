@@ -1,19 +1,20 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { getById, getInverseRelations, type Item } from '@/lib/content'
+import { getById, getBySlug, getInverseRelations, type Item } from '@/lib/content'
 import { RELATION_LABELS } from '@/lib/content/references'
 import { lifeSpan } from '@/lib/utils/format'
 import { Container } from '@/components/primitives/Container'
 import { Numerals } from '@/components/primitives/Numerals'
 import { PlaceholderNotice } from '@/components/primitives/PlaceholderNotice'
+import { Prose } from '@/components/exhibit/Prose'
 
 export const metadata: Metadata = { title: 'משפחתו והמשך דרכו' }
 
 const SUBJECT = 'rabbi-eliya-shlomo-liss'
 
 /** Which ties belong to which part of the page. */
-const HOUSE_OF_HIS_FATHER = new Set(['father', 'mother', 'brother', 'sister', 'sibling', 'parent'])
-const HIS_OWN_FAMILY = new Set([
+const HIS_PARENTS_HOUSE = new Set(['father', 'mother', 'brother', 'sister', 'sibling', 'parent'])
+const HIS_OWN_HOUSE = new Set([
   'spouse',
   'wife',
   'husband',
@@ -21,7 +22,16 @@ const HIS_OWN_FAMILY = new Set([
   'sister-in-law',
   'father-in-law',
 ])
-const NEXT_GENERATION = new Set(['son', 'daughter', 'child', 'son-in-law'])
+const NEXT_GENERATION = new Set([
+  'son',
+  'daughter',
+  'child',
+  'son-in-law',
+  'daughter-in-law',
+  'grandson',
+  'granddaughter',
+  'grandchild',
+])
 
 interface Tie {
   person: Item
@@ -104,6 +114,7 @@ export default function FamilyPage() {
   })
 
   const pick = (set: Set<string>) => ties.filter((t) => set.has(t.type))
+  const legacy = getBySlug('pages', 'family-legacy')
 
   return (
     <Container width="wide" className="pt-20 pb-20 lg:pt-28">
@@ -113,21 +124,31 @@ export default function FamilyPage() {
       </header>
 
       <Section
-        title="בית אביו ומשפחת מוצאו"
-        ties={pick(HOUSE_OF_HIS_FATHER)}
-        emptyNote="טרם נמסרו פרטים נוספים על בית אביו"
+        title="בית הוריו"
+        ties={pick(HIS_PARENTS_HOUSE)}
+        emptyNote="טרם נמסרו פרטים נוספים על בית הוריו"
       />
 
-      <Section title="משפחתו" ties={pick(HIS_OWN_FAMILY)} emptyNote="טרם נמסרו פרטים" />
+      <Section title="בית הרב" ties={pick(HIS_OWN_HOUSE)} emptyNote="טרם נמסרו פרטים" />
 
       <Section
-        title="דור ההמשך"
+        title="הדור הבא"
         ties={pick(NEXT_GENERATION)}
-        emptyNote="טרם נמסרו פרטים על דור ההמשך"
+        emptyNote="טרם נמסרו פרטים על הדור הבא"
       />
 
+      {legacy && (
+        <section className="border-rule border-t py-14 lg:py-20">
+          <h2 className="font-display text-3xl sm:text-4xl">{legacy.title}</h2>
+          <div className="mt-8">
+            <Prose source={legacy.body} />
+          </div>
+        </section>
+      )}
+
       <p className="label-caps border-rule text-ink-faint border-t pt-10">
-        פרטי המשפחה מבוססים על החומר שנמסר על ידי המשפחה. שמות שלא נמסרו אינם מופיעים כאן.
+        פרטי המשפחה מבוססים על החומר שנמסר על ידי המשפחה. שמות שלא נמסרו אינם מופיעים כאן, וצאצאים
+        נוספים יתווספו בהמשך.
       </p>
     </Container>
   )

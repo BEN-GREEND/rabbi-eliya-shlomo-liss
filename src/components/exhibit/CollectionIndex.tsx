@@ -12,7 +12,18 @@ import { ExhibitCard } from './ExhibitCard'
  * collection gets its own designed page in stage 4 (the museum gallery
  * composition, the archive table, the timeline spine).
  */
-export function CollectionIndex({ collection, intro }: { collection: Collection; intro?: string }) {
+export function CollectionIndex({
+  collection,
+  intro,
+  heading,
+  as: Heading = 'h1',
+}: {
+  collection: Collection
+  intro?: string
+  /** Override the collection's own label — e.g. when the page already has an h1. */
+  heading?: string
+  as?: 'h1' | 'h2'
+}) {
   const items = getAll(collection)
 
   return (
@@ -22,7 +33,9 @@ export function CollectionIndex({ collection, intro }: { collection: Collection;
           <YearMark year={items.length} size="md" />
         </div>
         <p className="label-caps text-brass">אוסף</p>
-        <h1 className="font-display mt-3 text-4xl sm:text-5xl">{COLLECTION_LABELS[collection]}</h1>
+        <Heading className="font-display mt-3 text-4xl sm:text-5xl">
+          {heading ?? COLLECTION_LABELS[collection]}
+        </Heading>
         {intro && <p className="text-ink-soft mt-5 max-w-[38rem]">{intro}</p>}
       </header>
 

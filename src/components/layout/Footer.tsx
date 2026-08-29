@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { COLLECTION_LABELS, COLLECTION_ROUTES, COLLECTIONS } from '@/lib/content/types'
+import { BROWSABLE_COLLECTIONS, COLLECTION_LABELS, COLLECTION_ROUTES } from '@/lib/content/types'
 import { MEMORIAL_LINK } from '@/lib/nav'
 import { getSite } from '@/lib/site'
 import { Container } from '@/components/primitives/Container'
@@ -22,7 +22,7 @@ export function Footer() {
           <nav aria-label="ניווט תחתון">
             <p className="label-caps text-brass-soft mb-4">אוספים</p>
             <ul className="grid grid-cols-2 gap-x-6 gap-y-2 text-[0.95rem]">
-              {COLLECTIONS.map((c) => (
+              {BROWSABLE_COLLECTIONS.map((c) => (
                 <li key={c}>
                   <Link
                     href={COLLECTION_ROUTES[c]}

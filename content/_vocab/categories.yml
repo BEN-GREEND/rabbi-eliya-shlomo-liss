@@ -59,6 +59,8 @@ archive:
     title: 'מסמכי ישיבה'
   - id: books
     title: 'ספרים'
+  - id: passing
+    title: 'פטירתו והספדים'
 
 people:
   - id: family

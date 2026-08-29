@@ -6,7 +6,7 @@ import { assetExists } from '@/lib/assets'
 import {
   COLLECTION_LABELS,
   COLLECTION_SINGULAR,
-  COLLECTIONS,
+  BROWSABLE_COLLECTIONS,
   getAll,
   getBySlug,
   getById,
@@ -88,7 +88,7 @@ export default async function PersonPage({ params }: { params: Promise<{ slug: s
 
   // Everything in the archive that points at this person, grouped by collection.
   const linked = getPersonItems(person.id)
-  const grouped = COLLECTIONS.filter((c) => c !== 'people' && c !== 'sources')
+  const grouped = BROWSABLE_COLLECTIONS.filter((c) => c !== 'people' && c !== 'sources')
     .map((collection) => ({
       collection,
       items: linked.filter((i) => i.collection === collection),

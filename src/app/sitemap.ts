@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { COLLECTION_ROUTES, COLLECTIONS, getAll } from '@/lib/content'
+import { BROWSABLE_COLLECTIONS, COLLECTION_ROUTES, getAll } from '@/lib/content'
 import { getSite } from '@/lib/site'
 
 /** Generated from the content index — never maintained by hand. */
@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path === '/' ? 1 : 0.5,
   }))
 
-  const collectionPages = COLLECTIONS.flatMap((collection) => [
+  const collectionPages = BROWSABLE_COLLECTIONS.flatMap((collection) => [
     { url: abs(COLLECTION_ROUTES[collection]), changeFrequency: 'weekly' as const, priority: 0.8 },
     ...getAll(collection).map((item) => ({
       url: abs(item.url),

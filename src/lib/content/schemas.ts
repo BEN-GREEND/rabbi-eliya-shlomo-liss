@@ -100,6 +100,31 @@ const base = {
   credit: z.string().optional(),
 }
 
+/**
+ * What the archive can say about a physical object.
+ *
+ * A museum describes objects it does not hold: ones still in the family's
+ * hands, ones known to exist but not yet scanned, and ones that are simply
+ * gone. Each of these is a different statement and the site must not blur
+ * them — "we have not digitised it" is not "we do not know if it survived".
+ */
+const zAssetStatus = z.enum([
+  /** The file is in the archive and can be shown. */
+  'present',
+  /** The original is held, and confirmed to exist, but not yet scanned. */
+  'not-digitized',
+  /** Held privately by the family. Described here, not served from here. */
+  'private-archive',
+  /** Identified and described, but the file is not in hand. */
+  'awaited',
+  /** Found bibliographically; the object itself has not been obtained. */
+  'located',
+  /** Known to have existed; not located. */
+  'sought',
+  /** No longer extant. */
+  'lost',
+])
+
 export const personRelationTypes = [
   'father',
   'mother',
@@ -114,6 +139,12 @@ export const personRelationTypes = [
   'father-in-law',
   'brother-in-law',
   'sister-in-law',
+  'daughter-in-law',
+  'mother-in-law',
+  'grandson',
+  'granddaughter',
+  'grandchild',
+  'grandparent',
   'teacher',
   'student',
   'colleague',
@@ -135,6 +166,17 @@ export const sourceTypes = [
 ] as const
 
 export const schemas = {
+  /**
+   * Standing prose that belongs to a page rather than to an exhibit — the
+   * biographical essay, the passage on the family's continuation. Kept in
+   * content so it can be rewritten without touching a component, and so it
+   * carries sources like everything else.
+   */
+  pages: z.object({
+    ...base,
+    people: z.array(zId).default([]),
+  }),
+
   /**
    * The bibliography. One record per source, cited by id from anywhere.
    * A source we have located but not yet read is still a record — knowing
@@ -225,6 +267,12 @@ export const schemas = {
     kind: z.enum(['article', 'lecture', 'excerpt', 'letter', 'manuscript', 'quote', 'book']),
     topic: z.array(z.string()).default([]),
     parasha: z.string().optional(),
+    /** Who prepared the volume for print — distinct from its author. */
+    editor: z.array(zId).default([]),
+    tractate: z.string().optional(),
+    chapter: z.string().optional(),
+    /** How many parts have actually appeared. Never more than we know of. */
+    publishedParts: z.number().int().optional(),
     coverImage: zImage.optional(),
     pdf: z.string().optional(),
     scans: z.array(z.string()).default([]),
@@ -235,12 +283,7 @@ export const schemas = {
     ...base,
     ...dating,
     description: z.string().optional(),
-    /**
-     * A museum catalogues objects it has not yet acquired. `awaited` means the
-     * photograph is identified and described but the file is not in hand;
-     * the site shows the label with an empty plate rather than nothing.
-     */
-    assetStatus: z.enum(['present', 'awaited', 'unavailable']).default('present'),
+    assetStatus: zAssetStatus.default('present'),
     image: zImage.optional(),
     location: z.string().optional(),
     photographer: z.string().optional(),
@@ -263,8 +306,9 @@ export const schemas = {
       'document',
     ]),
     description: z.string().optional(),
-    /** Whether the document itself is in hand, merely located, or still sought. */
-    acquisitionStatus: z.enum(['obtained', 'located', 'sought', 'lost']).default('obtained'),
+    assetStatus: zAssetStatus.default('present'),
+    /** Who holds the original. Family-held material is described, never served. */
+    custodian: zId.optional(),
     /** Person ids. Empty when unknown — never guessed. */
     author: zId.optional(),
     recipient: zId.optional(),

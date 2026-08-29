@@ -16,9 +16,21 @@ export const COLLECTIONS = [
   'testimonies',
   'activities',
   'sources',
+  'pages',
 ] as const
 
 export type Collection = (typeof COLLECTIONS)[number]
+
+/**
+ * Collections a visitor can browse — the ones with routes.
+ *
+ * `pages` holds standing prose that belongs inside another page (the
+ * biographical essay, the legacy passage). It has no URL of its own, so it
+ * must never appear in navigation or in the sitemap.
+ */
+export const BROWSABLE_COLLECTIONS = COLLECTIONS.filter(
+  (c): c is Exclude<Collection, 'pages'> => c !== 'pages',
+)
 
 /** Hebrew display names, used in navigation, headings and validation output. */
 export const COLLECTION_LABELS: Record<Collection, string> = {
@@ -30,6 +42,7 @@ export const COLLECTION_LABELS: Record<Collection, string> = {
   testimonies: 'זכרונות ועדויות',
   activities: 'פעילותו',
   sources: 'מקורות',
+  pages: 'טקסטים',
 }
 
 /** URL segment for each collection. */
@@ -42,6 +55,8 @@ export const COLLECTION_ROUTES: Record<Collection, string> = {
   testimonies: '/testimonies',
   activities: '/activities',
   sources: '/sources',
+  // No route: pages are rendered inside other pages, never on their own.
+  pages: '',
 }
 
 /** Singular Hebrew label — used for the exhibit label and for error messages. */
@@ -54,6 +69,7 @@ export const COLLECTION_SINGULAR: Record<Collection, string> = {
   testimonies: 'עדות',
   activities: 'פעילות',
   sources: 'מקור',
+  pages: 'טקסט',
 }
 
 /** A parsed item before cross-collection validation has run. */
