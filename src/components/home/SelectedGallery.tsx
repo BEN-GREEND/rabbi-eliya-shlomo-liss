@@ -54,7 +54,7 @@ export function SelectedGallery({ index }: { index: number }) {
                 <figure>
                   <div
                     className={cn(
-                      'border-rule bg-paper-deep relative overflow-hidden border',
+                      'border-paper-edge bg-paper-deep group-hover:border-brass-line relative overflow-hidden border-2 shadow-[var(--shadow-rest)] transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-[var(--shadow-lift)]',
                       RATIOS[emphasis] ?? RATIOS.medium,
                     )}
                   >
@@ -65,7 +65,7 @@ export function SelectedGallery({ index }: { index: number }) {
                         fill
                         loading="lazy"
                         sizes="(min-width: 640px) 40vw, 100vw"
-                        className="object-cover transition-transform duration-700 ease-[var(--ease-exhibit)] group-hover:scale-[1.02]"
+                        className="plate-image group-hover:plate-image-hover object-cover"
                       />
                     ) : (
                       <span className="label-caps text-ink-faint absolute inset-0 flex items-center justify-center">
@@ -73,8 +73,8 @@ export function SelectedGallery({ index }: { index: number }) {
                       </span>
                     )}
                   </div>
-                  <figcaption className="border-rule group-hover:border-brass mt-3 border-s ps-3 transition-colors">
-                    <span className="font-display block text-[1.0625rem] leading-snug">
+                  <figcaption className="border-brass-line/50 group-hover:border-wine mt-3 border-s-2 ps-3 transition-colors">
+                    <span className="font-display group-hover:text-wine block text-[1.0625rem] leading-snug transition-colors">
                       {item.title}
                     </span>
                     {date && <span className="label-caps text-ink-faint mt-1 block">{date}</span>}

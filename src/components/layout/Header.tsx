@@ -9,26 +9,30 @@ import { NavLinks } from './NavLinks'
 /**
  * The header.
  *
- * Two rules rather than one — a hairline and a brass thread beneath it — so
- * the bar reads as the edge of a case rather than a border. The name sits in
- * display type with its years beside it; search and the memorial are pulled
- * out of the navigation and given their own marks, because they are actions
- * and not sections.
+ * A petrol band, not a line of text on paper: the name in ivory display type
+ * with its years beside it in brass, the navigation light against the dark,
+ * and a brass thread along the bottom edge where the band meets the page. It
+ * is the lintel of the building, and the first thing that says this is not an
+ * ordinary site.
+ *
+ * Search and the memorial are pulled out of the navigation and given their own
+ * marks, because they are actions and not sections — and the memorial is given
+ * a wine field of its own, because it is the one action that is not browsing.
  */
 export function Header() {
   const site = getSite()
 
   return (
-    <header className="bg-paper/90 sticky top-0 z-40 backdrop-blur-sm">
-      <div className="mx-auto flex h-16 w-full max-w-[86rem] items-center gap-6 px-6 sm:px-10 lg:h-[4.75rem] lg:px-16">
+    <header className="bg-navy/95 sticky top-0 z-40 backdrop-blur-sm">
+      <div className="mx-auto flex h-16 w-full max-w-[86rem] items-center gap-6 px-6 sm:px-10 lg:h-[5.25rem] lg:px-16">
         <Link href="/" className="group flex items-baseline gap-3 no-underline">
-          <span className="font-display group-hover:text-wine text-[1.0625rem] leading-none tracking-tight transition-colors lg:text-lg">
+          <span className="font-display text-paper group-hover:text-brass-soft text-[1.0625rem] leading-none tracking-tight transition-colors lg:text-xl">
             {site.name}
           </span>
           <span
             dir="ltr"
             aria-hidden="true"
-            className="label-caps numerals text-ink-faint hidden lg:inline"
+            className="label-caps numerals text-brass-soft hidden lg:inline"
           >
             1901–1963
           </span>
@@ -38,20 +42,22 @@ export function Header() {
           <NavLinks />
         </nav>
 
-        <div className="border-rule ms-6 hidden items-center gap-1 border-s ps-6 lg:flex">
+        <div className="border-rule-navy ms-5 hidden items-center gap-2 border-s ps-5 lg:flex">
           <Link
             href={SEARCH_LINK.href}
-            className="text-ink-soft hover:text-ink flex items-center gap-2 px-2 py-2 text-[0.95rem] no-underline transition-colors"
+            className="text-paper/75 hover:text-paper hover:bg-paper/[0.08] flex items-center gap-2 px-3 py-2.5 text-[0.95rem] no-underline transition-colors duration-200"
           >
             <Glyph name="search" className="h-4 w-4" />
             {SEARCH_LINK.label}
           </Link>
 
+          {/* The memorial: its own field, in wine, so it never reads as one
+              more section in the list. */}
           <Link
             href={MEMORIAL_LINK.href}
-            className="text-wine hover:bg-wine hover:text-paper border-wine-line/40 hover:border-wine ms-1 flex items-center gap-2 border px-3 py-2 text-[0.95rem] no-underline transition-colors duration-200"
+            className="text-paper border-wine-line/70 bg-wine/45 hover:bg-wine hover:border-wine flex items-center gap-2.5 border px-4 py-2.5 text-[0.95rem] no-underline transition-colors duration-200"
           >
-            <CandleGlyph className="h-4 w-2.5" />
+            <CandleGlyph className="text-brass-soft h-4 w-2.5" />
             {MEMORIAL_LINK.label}
           </Link>
         </div>
@@ -61,9 +67,8 @@ export function Header() {
         </div>
       </div>
 
-      {/* Two rules: a hairline, then a brass thread. The edge of the case. */}
-      <div className="border-rule border-b" />
-      <div className="via-brass-line/45 h-px bg-gradient-to-l from-transparent to-transparent" />
+      {/* The brass thread where the band meets the page. */}
+      <div className="via-brass-line to-brass-line/25 h-px bg-gradient-to-l from-transparent" />
     </header>
   )
 }

@@ -8,9 +8,11 @@ import { cn } from '@/lib/utils/cn'
 /**
  * A section of the home page, in one of two states.
  *
- * With content it opens fully, on whichever ground it was given — sections
- * alternate between paper and a warmer stone so the page has bands rather than
- * one continuous sheet.
+ * With content it opens fully, on whichever of four grounds it was given.
+ * The page walks paper → stone → petrol → paper → wine → stone, so moving down
+ * it feels like moving through rooms rather than scrolling one sheet. The dark
+ * band inverts everything inside it: heading, rules and cards all switch to
+ * their deep variants.
  *
  * Without content it collapses to a single row: mark, number, title, and a
  * quiet "בהכנה". Consecutive rows stack into what reads as a contents page for
@@ -35,9 +37,10 @@ export function HomeSection({
   eyebrow?: string
   glyph?: GlyphName
   empty?: boolean
-  ground?: 'paper' | 'stone'
+  ground?: 'paper' | 'stone' | 'wine' | 'deep'
   children?: ReactNode
 }) {
+  const deep = ground === 'deep'
   if (empty) {
     return (
       <section className="border-rule border-t">
@@ -67,14 +70,22 @@ export function HomeSection({
   }
 
   return (
-    <section className={cn('border-rule border-t', ground === 'stone' && 'bg-paper-deep/55')}>
-      <Container width="wide" className="py-16 lg:py-24">
+    <section
+      className={cn(
+        'border-rule border-t',
+        ground === 'stone' && 'bg-paper-deep/60',
+        ground === 'wine' && 'bg-wine-faint/55',
+        deep && 'ground-deep paper-grain border-t-0',
+      )}
+    >
+      <Container width="wide" className={cn('py-16 lg:py-24', deep && 'lg:py-28')}>
         <SectionHeading
           index={index}
           eyebrow={eyebrow}
           title={title}
           glyph={glyph}
           action={{ href, label: linkLabel }}
+          tone={deep ? 'deep' : 'light'}
           className="mb-12"
         />
         {children}

@@ -7,9 +7,9 @@ export function Introduction() {
   const site = getSite()
 
   return (
-    <section className="border-rule border-t">
+    <section className="border-rule bg-paper-deep/35 border-t">
       <Container width="wide" className="py-16 lg:py-24">
-        <div className="max-w-[38rem]">
+        <div className="border-brass max-w-[42rem] border-s-2 ps-7">
           {site.intro ? (
             <p className="font-display text-ink text-xl leading-[1.7] sm:text-2xl">{site.intro}</p>
           ) : (

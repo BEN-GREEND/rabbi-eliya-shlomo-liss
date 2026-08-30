@@ -49,7 +49,7 @@ export function MobileMenu() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls="mobile-nav"
-        className="label-caps text-ink -me-2 flex items-center gap-2 p-2"
+        className="label-caps text-paper -me-2 flex items-center gap-2 p-2"
       >
         <span className="flex flex-col gap-[3px]" aria-hidden="true">
           <span className="block h-px w-5 bg-current" />
@@ -62,22 +62,26 @@ export function MobileMenu() {
         <div
           id="mobile-nav"
           ref={panelRef}
-          className="paper-grain bg-paper fixed inset-0 z-50 overflow-y-auto px-6 pt-24 pb-16"
+          className="paper-grain bg-navy text-paper fixed inset-0 z-50 overflow-y-auto px-6 pt-24 pb-16"
         >
-          <button type="button" onClick={close} className="label-caps absolute end-6 top-7 p-2">
+          <button
+            type="button"
+            onClick={close}
+            className="label-caps text-paper absolute end-6 top-7 p-2"
+          >
             סגירה
           </button>
 
           <nav aria-label="ניווט ראשי">
             <ul className="flex flex-col">
               {PRIMARY_NAV.map((link, i) => (
-                <li key={link.href} className="border-rule border-b">
+                <li key={link.href} className="border-rule-navy border-b">
                   <Link
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className="font-display flex items-baseline gap-4 py-4 text-2xl no-underline"
+                    className="font-display text-paper hover:text-brass-soft flex items-baseline gap-4 py-4 text-2xl no-underline transition-colors"
                   >
-                    <span className="label-caps numerals text-brass w-6">
+                    <span className="label-caps numerals text-brass-soft w-6">
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     {link.label}
@@ -89,7 +93,7 @@ export function MobileMenu() {
             <Link
               href={SEARCH_LINK.href}
               onClick={() => setOpen(false)}
-              className="font-display text-ink mt-10 block text-xl no-underline"
+              className="font-display text-paper/80 hover:text-paper mt-10 block text-xl no-underline transition-colors"
             >
               {SEARCH_LINK.label}
             </Link>
@@ -97,9 +101,9 @@ export function MobileMenu() {
             <Link
               href={MEMORIAL_LINK.href}
               onClick={() => setOpen(false)}
-              className="font-display text-ink mt-5 inline-flex items-center gap-3 text-xl no-underline"
+              className="font-display text-paper border-wine-line/60 bg-wine/40 hover:bg-wine mt-6 inline-flex items-center gap-3 border px-5 py-3 text-xl no-underline transition-colors"
             >
-              <CandleGlyph className="text-brass h-6 w-4" />
+              <CandleGlyph className="text-brass-soft h-6 w-4" />
               {MEMORIAL_LINK.label}
             </Link>
           </nav>

@@ -3,19 +3,23 @@ import Link from 'next/link'
 import { Glyph } from './Glyph'
 import { cn } from '@/lib/utils/cn'
 
-type Variant = 'primary' | 'secondary' | 'memorial'
+type Variant = 'primary' | 'secondary' | 'onDeep' | 'memorial'
 
 const VARIANTS: Record<Variant, string> = {
   primary: 'btn-primary',
   secondary: 'btn-secondary',
+  onDeep: 'btn-on-deep',
   memorial: 'btn-memorial',
 }
 
 /**
  * The site's calls to action.
  *
- * Three weights, so it is always clear what is clickable and how much it
- * matters. The arrow is flipped for RTL, where forward is to the left.
+ * Four weights, so it is always clear what is clickable and how much it
+ * matters: petrol for the primary action, an outline for the secondary, the
+ * same outline in brass for a dark ground, and wine for the memorial. The
+ * arrow is flipped for RTL, where forward is to the left, and slides on
+ * approach.
  */
 export function ButtonLink({
   href,
@@ -31,9 +35,14 @@ export function ButtonLink({
   children: ReactNode
 }) {
   return (
-    <Link href={href} className={cn('btn-base', VARIANTS[variant], className)}>
+    <Link href={href} className={cn('group btn-base', VARIANTS[variant], className)}>
       {children}
-      {arrow && <Glyph name="arrow" className="h-4 w-4 rotate-180" />}
+      {arrow && (
+        <Glyph
+          name="arrow"
+          className="arrow-slide group-hover:arrow-slide-hover h-4 w-4 rotate-180"
+        />
+      )}
     </Link>
   )
 }

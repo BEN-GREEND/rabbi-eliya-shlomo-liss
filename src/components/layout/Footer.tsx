@@ -18,7 +18,7 @@ export function Footer() {
   const site = getSite()
 
   return (
-    <footer className="paper-grain bg-deep text-paper mt-32">
+    <footer className="ground-deep paper-grain bg-navy-deep mt-32">
       <div className="via-brass-line/60 h-px bg-gradient-to-l from-transparent to-transparent" />
 
       <Container width="wide" className="py-16 lg:py-24">
@@ -76,7 +76,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-rule-deep mt-16 flex flex-wrap items-center gap-x-6 gap-y-2 border-t pt-8">
+        <div className="border-rule-navy mt-16 flex flex-wrap items-center gap-x-6 gap-y-2 border-t pt-8">
           <p className="label-caps text-paper/55">אתר מורשת · כל הזכויות שמורות</p>
           <span className="ms-auto">
             <VisitorCount />

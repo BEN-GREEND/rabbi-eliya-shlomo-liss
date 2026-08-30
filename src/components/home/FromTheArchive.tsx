@@ -35,7 +35,7 @@ export function FromTheArchive() {
   const date = formatDate(d)
 
   return (
-    <section className="paper-grain border-rule bg-deep text-paper border-t">
+    <section className="ground-deep paper-grain">
       <Container width="wide" className="py-20 lg:py-28">
         <div className="grid items-center gap-x-16 gap-y-10 lg:grid-cols-12">
           <div className="lg:col-span-7">

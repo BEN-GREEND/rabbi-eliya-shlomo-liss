@@ -28,7 +28,7 @@ export function PeopleAlongTheWay({ index }: { index: number }) {
     <HomeSection
       index={index}
       glyph="person"
-      ground="stone"
+      ground="wine"
       title="אנשים בדרכו"
       href="/people"
       linkLabel="לכל האישים"

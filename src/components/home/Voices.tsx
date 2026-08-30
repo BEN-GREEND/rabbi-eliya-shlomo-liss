@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { getById, getReal } from '@/lib/content'
+import { Glyph } from '@/components/primitives/Glyph'
 import { HomeSection } from './HomeSection'
 
 /**
@@ -14,13 +15,13 @@ export function Voices({ index }: { index: number }) {
     <HomeSection
       index={index}
       glyph="testimony"
-      ground="paper"
+      ground="deep"
       title="קולות מהתערוכה"
       eyebrow="זכרונות ועדויות"
       href="/testimonies"
       empty={items.length === 0}
     >
-      <ul className="grid gap-x-12 gap-y-14 md:grid-cols-3">
+      <ul className="grid gap-5 md:grid-cols-3">
         {items.map((item) => {
           const d = item.data as Record<string, unknown>
           const narrator = typeof d.narrator === 'string' ? getById(d.narrator) : undefined
@@ -33,17 +34,21 @@ export function Voices({ index }: { index: number }) {
           const attribution = [narratorName, relation].filter(Boolean).join(' · ')
 
           return (
-            <li key={item.id}>
-              <Link href={item.url} className="group block no-underline">
-                <blockquote className="font-display text-ink text-xl leading-[1.6]">
+            <li key={item.id} className="group">
+              <Link
+                href={item.url}
+                className="surface-card-deep group-hover:surface-card-deep-hover flex h-full flex-col px-6 py-7 no-underline"
+              >
+                <Glyph name="quote" className="text-brass-soft/50 h-6 w-6" />
+                <blockquote className="font-display text-paper mt-4 text-xl leading-[1.6]">
                   {typeof d.pullQuote === 'string' && d.pullQuote ? (
-                    <p>„{d.pullQuote}”</p>
+                    <p>{d.pullQuote}</p>
                   ) : (
-                    <p className="group-hover:text-brass transition-colors">{item.title}</p>
+                    <p className="group-hover:text-brass-soft transition-colors">{item.title}</p>
                   )}
                 </blockquote>
                 {attribution && (
-                  <p className="label-caps border-rule text-ink-faint mt-4 border-t pt-3">
+                  <p className="label-caps border-rule-navy text-brass-soft mt-auto border-t pt-4">
                     {attribution}
                   </p>
                 )}

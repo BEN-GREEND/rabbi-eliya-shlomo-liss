@@ -24,7 +24,7 @@ export function ExhibitCard({ item, index }: { item: Item; index: number }) {
     <article className="group h-full">
       <Link
         href={item.url}
-        className="surface-card group-hover:surface-card-hover block h-full px-5 py-5 no-underline sm:px-6 sm:py-6"
+        className="surface-card group-hover:surface-card-hover flex h-full flex-col px-5 py-5 no-underline sm:px-6 sm:py-6"
       >
         <Glyph
           name={COLLECTION_GLYPH[item.collection] ?? 'archive'}
@@ -43,6 +43,19 @@ export function ExhibitCard({ item, index }: { item: Item; index: number }) {
             <PlaceholderNotice />
           ) : null}
         </ExhibitLabel>
+
+        {/* The affordance: a rule that fills in brass, and an arrow that moves. */}
+        <span
+          aria-hidden="true"
+          className="border-rule-soft mt-auto flex items-center gap-2 border-t pt-4"
+          style={{ marginTop: 'auto' }}
+        >
+          <span className="bg-brass-line/0 group-hover:bg-brass-line h-px flex-1 transition-colors duration-300" />
+          <Glyph
+            name="arrow"
+            className="arrow-slide group-hover:arrow-slide-hover text-brass-line group-hover:text-wine h-4 w-4 transition-colors"
+          />
+        </span>
       </Link>
     </article>
   )
