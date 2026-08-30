@@ -13,15 +13,19 @@ export async function GET() {
 
 export async function POST(request: Request) {
   let displayName: unknown
+  let publishName: unknown
   try {
     const body = await request.json()
     displayName = (body as { displayName?: unknown })?.displayName
+    publishName = (body as { publishName?: unknown })?.publishName
   } catch {
     // A body is optional — lighting a candle without a name is the norm.
   }
 
   try {
-    return Response.json(await lightCandle(displayName))
+    // The provider cleans the name and decides on publication; the browser's
+    // answer to either question is a request, not a decision.
+    return Response.json(await lightCandle(displayName, publishName))
   } catch (error) {
     return Response.json({ error: (error as Error).message }, { status: 503 })
   }

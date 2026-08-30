@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { getSite } from '@/lib/site'
 import { Container } from '@/components/primitives/Container'
 import { Rule } from '@/components/primitives/Rule'
-import { MemorialCandle } from '@/components/memorial/MemorialCandle'
+import { MemorialSection } from '@/components/memorial/MemorialSection'
 
 export const metadata: Metadata = { title: 'נר זכרון' }
 
@@ -10,7 +10,8 @@ export const metadata: Metadata = { title: 'נר זכרון' }
  * The memorial page.
  *
  * The stillest page on the site: a great deal of space, one candle, one line.
- * The page is static; only the count is fetched, by the candle itself.
+ * The page is static; the count, and the names of those who asked to be named,
+ * are fetched by the client components themselves.
  */
 export default function MemorialPage() {
   const site = getSite()
@@ -30,7 +31,7 @@ export default function MemorialPage() {
         </div>
 
         <div className="mt-24">
-          <MemorialCandle />
+          <MemorialSection />
         </div>
 
         {site.memorial.text && (
@@ -43,7 +44,8 @@ export default function MemorialPage() {
         )}
 
         <p className="label-caps text-ink-faint mx-auto mt-24 max-w-[30rem] text-center">
-          לא נשמר כל מידע מזהה. אין הרשמה, ואין צורך למסור שם.
+          לא נשמרים כתובת IP, מזהה דפדפן או כל מידע מזהה אחר. שם שנמסר נשמר בלבד, ומוצג רק בהסכמה
+          מפורשת.
         </p>
       </Container>
     </div>
