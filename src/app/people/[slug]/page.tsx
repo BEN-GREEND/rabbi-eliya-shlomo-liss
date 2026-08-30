@@ -112,7 +112,7 @@ export default async function PersonPage({ params }: { params: Promise<{ slug: s
     .filter((g) => g.items.length > 0)
 
   return (
-    <Container width="default" className="py-20 lg:py-28">
+    <Container width="default" className="pt-12 pb-20 lg:pt-16 lg:pb-28">
       <article>
         <div className="mb-6 flex items-center gap-3">
           <Glyph name="person" className="text-brass h-4 w-4" />

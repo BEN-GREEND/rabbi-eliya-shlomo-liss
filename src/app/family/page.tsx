@@ -118,7 +118,7 @@ export default function FamilyPage() {
   const legacy = getBySlug('pages', 'family-legacy')
 
   return (
-    <Container width="wide" className="pt-20 pb-20 lg:pt-28">
+    <Container width="wide" className="pt-12 pb-20 lg:pt-16">
       <header className="mb-14">
         <SectionHeading eyebrow="עמוד" title="משפחתו והמשך דרכו" glyph="person" as="h1" />
       </header>

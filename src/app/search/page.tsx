@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: 'חיפוש' }
 
 export default function SearchPage() {
   return (
-    <Container width="wide" className="py-20 lg:py-28">
+    <Container width="wide" className="pt-12 pb-20 lg:pt-16 lg:pb-28">
       <SectionHeading
         eyebrow="חיפוש"
         title="חיפוש בארכיון"

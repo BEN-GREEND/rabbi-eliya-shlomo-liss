@@ -47,7 +47,7 @@ export default function ArchivePage() {
     .filter((d) => d.count > 0)
 
   return (
-    <Container width="wide" className="py-20 lg:py-28">
+    <Container width="wide" className="pt-12 pb-20 lg:pt-16 lg:pb-28">
       <header className="mb-12">
         <SectionHeading eyebrow="אוסף" title="ארכיון" glyph="archive" as="h1" index={docs.length} />
         <p className="text-ink-soft mt-6 max-w-[38rem] leading-relaxed">

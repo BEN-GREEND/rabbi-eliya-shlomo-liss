@@ -42,7 +42,7 @@ export default function PeoplePage() {
     .filter((c) => c.count > 0)
 
   return (
-    <Container width="wide" className="py-20 lg:py-28">
+    <Container width="wide" className="pt-12 pb-20 lg:pt-16 lg:pb-28">
       <header className="mb-12">
         <SectionHeading eyebrow="אוסף" title="אישים" glyph="person" as="h1" index={people.length} />
         <p className="text-ink-soft mt-6 max-w-[38rem] leading-relaxed">

@@ -55,7 +55,8 @@ export function MobileMenu() {
           <span className="block h-px w-5 bg-current" />
           <span className="block h-px w-5 bg-current" />
         </span>
-        {open ? 'סגירה' : 'תפריט'}
+        <span className="hidden sm:inline">{open ? 'סגירה' : 'תפריט'}</span>
+        <span className="sr-only sm:hidden">{open ? 'סגירה' : 'תפריט'}</span>
       </button>
 
       {open && (

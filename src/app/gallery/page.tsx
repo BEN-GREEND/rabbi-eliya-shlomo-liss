@@ -53,7 +53,7 @@ export default function GalleryPage() {
   const awaiting = photos.filter((p) => !p.image).length
 
   return (
-    <Container width="wide" className="py-20 lg:py-28">
+    <Container width="wide" className="pt-12 pb-20 lg:pt-16 lg:pb-28">
       <header className="mb-12">
         <SectionHeading
           eyebrow="אוסף"

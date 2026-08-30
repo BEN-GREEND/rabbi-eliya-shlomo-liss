@@ -55,7 +55,7 @@ export default function TimelinePage() {
 
   return (
     <>
-      <Container width="wide" className="pt-20 lg:pt-28">
+      <Container width="wide" className="pt-12 lg:pt-16">
         <SectionHeading
           eyebrow="תולדות חייו"
           title="הרב אליהו שלמה ליס"

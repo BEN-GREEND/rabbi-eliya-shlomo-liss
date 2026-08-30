@@ -54,7 +54,10 @@ export function ExhibitPage({ collection, slug }: { collection: Collection; slug
   const date = formatDate(d)
 
   return (
-    <Container width={collection === 'gallery' ? 'wide' : 'default'} className="py-20 lg:py-28">
+    <Container
+      width={collection === 'gallery' ? 'wide' : 'default'}
+      className="pt-12 pb-20 lg:pt-16 lg:pb-28"
+    >
       <article>
         <header className="relative">
           {typeof d.year === 'number' && d.undated !== true && (

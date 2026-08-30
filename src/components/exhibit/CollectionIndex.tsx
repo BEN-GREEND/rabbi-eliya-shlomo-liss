@@ -29,7 +29,7 @@ export function CollectionIndex({
   const items = getAll(collection)
 
   return (
-    <Container width="wide" className="py-20 lg:py-28">
+    <Container width="wide" className="pt-12 pb-20 lg:pt-16 lg:pb-28">
       <header className="relative mb-16">
         <div className="pointer-events-none absolute end-0 -top-16 -z-10 hidden sm:block">
           <YearMark year={items.length} size="md" />

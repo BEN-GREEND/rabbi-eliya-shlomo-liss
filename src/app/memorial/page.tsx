@@ -18,7 +18,7 @@ export default function MemorialPage() {
 
   return (
     <div className="from-stone/70 via-paper to-paper relative isolate overflow-x-clip bg-gradient-to-b">
-      <Container width="narrow" className="py-24 lg:py-32">
+      <Container width="narrow" className="pt-16 pb-24 lg:pt-20 lg:pb-32">
         <div className="text-center">
           <div className="mx-auto mb-6 flex w-fit items-center gap-3">
             <span aria-hidden="true" className="bg-wine-line/40 h-px w-8" />

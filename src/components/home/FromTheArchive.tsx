@@ -36,7 +36,7 @@ export function FromTheArchive() {
 
   return (
     <section className="ground-deep paper-grain">
-      <Container width="wide" className="py-20 lg:py-28">
+      <Container width="wide" className="pt-12 pb-20 lg:pt-16 lg:pb-28">
         <div className="grid items-center gap-x-16 gap-y-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <p className="label-caps text-brass-soft tracking-[var(--tracking-wide-label)]">
