@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { getSite } from '@/lib/site'
 import { Container } from '@/components/primitives/Container'
-import { Rule } from '@/components/primitives/Rule'
 import { MemorialSection } from '@/components/memorial/MemorialSection'
 
 export const metadata: Metadata = { title: 'נר זכרון' }
@@ -9,7 +8,10 @@ export const metadata: Metadata = { title: 'נר זכרון' }
 /**
  * The memorial page.
  *
- * The stillest page on the site: a great deal of space, one candle, one line.
+ * A dim room rather than a bright one: deep petrol, so a drawn flame reads as
+ * a flame and the light it gives has somewhere to fall. The candle and the act
+ * of lighting sit side by side, on screen together.
+ *
  * The page is static; the count, and the names of those who asked to be named,
  * are fetched by the client components themselves.
  */
@@ -17,36 +19,18 @@ export default function MemorialPage() {
   const site = getSite()
 
   return (
-    <div className="from-stone/70 via-paper to-paper relative isolate overflow-x-clip bg-gradient-to-b">
-      <Container width="narrow" className="pt-16 pb-24 lg:pt-20 lg:pb-32">
-        <div className="text-center">
-          <div className="mx-auto mb-6 flex w-fit items-center gap-3">
-            <span aria-hidden="true" className="bg-wine-line/40 h-px w-8" />
-            <p className="eyebrow">{site.memorial.title}</p>
-            <span aria-hidden="true" className="bg-wine-line/40 h-px w-8" />
-          </div>
-          <h1 className="font-display text-4xl leading-[1.15] sm:text-5xl lg:text-[3.5rem]">
-            {site.name}
-          </h1>
-        </div>
-
-        <div className="mt-24">
-          <MemorialSection />
-        </div>
+    <div className="ground-deep paper-grain relative isolate overflow-x-clip">
+      <Container width="wide" className="pt-16 pb-24 lg:pt-24 lg:pb-32">
+        <MemorialSection memorialTitle={site.memorial.title} siteName={site.name} />
 
         {site.memorial.text && (
           <>
-            <Rule className="mt-28" />
-            <p className="font-display text-ink-soft mx-auto mt-12 max-w-[34rem] text-center text-lg leading-relaxed">
+            <span aria-hidden="true" className="bg-brass-line/30 mx-auto mt-24 block h-px w-24" />
+            <p className="font-display text-paper/75 mx-auto mt-12 max-w-[34rem] text-center text-lg leading-relaxed">
               {site.memorial.text}
             </p>
           </>
         )}
-
-        <p className="label-caps text-ink-faint mx-auto mt-24 max-w-[30rem] text-center">
-          לא נשמרים כתובת IP, מזהה דפדפן או כל מידע מזהה אחר. שם שנמסר נשמר בלבד, ומוצג רק בהסכמה
-          מפורשת.
-        </p>
       </Container>
     </div>
   )

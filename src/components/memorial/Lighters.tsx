@@ -88,26 +88,26 @@ export function Lighters({ reloadKey = 0 }: { reloadKey?: number }) {
   return (
     <section className="mt-28" aria-labelledby="lighters-heading">
       <div className="mb-10 flex items-center gap-3">
-        <span aria-hidden="true" className="bg-wine-line/30 h-px flex-1" />
-        <Glyph name="person" className="text-brass h-4 w-4" />
-        <h2 id="lighters-heading" className="eyebrow">
+        <span aria-hidden="true" className="bg-brass-line/30 h-px flex-1" />
+        <Glyph name="person" className="text-brass-soft h-4 w-4" />
+        <h2 id="lighters-heading" className="label-caps text-brass-soft">
           מדליקי נרות
         </h2>
-        <span aria-hidden="true" className="bg-wine-line/30 h-px flex-1" />
+        <span aria-hidden="true" className="bg-brass-line/30 h-px flex-1" />
       </div>
 
       <ul className="mx-auto max-w-[34rem]">
         {lighters.map((lighter) => (
           <li
             key={lighter.key}
-            className="border-rule-soft flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b py-5 last:border-b-0"
+            className="border-rule-navy flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b py-4 last:border-b-0"
           >
             {/* A name may run to sixty characters; it wraps rather than
                 pushing the date off the row. */}
-            <span className="font-display text-ink min-w-0 flex-1 text-xl leading-snug break-words">
+            <span className="font-display text-paper min-w-0 flex-1 text-xl leading-snug break-words">
               {lighter.name}
             </span>
-            <time dateTime={lighter.litAt} className="label-caps numerals text-ink-faint shrink-0">
+            <time dateTime={lighter.litAt} className="label-caps numerals text-paper/55 shrink-0">
               {litOn(lighter.litAt)}
             </time>
           </li>
@@ -118,7 +118,7 @@ export function Lighters({ reloadKey = 0 }: { reloadKey?: number }) {
         <div className="mt-10 flex justify-center">
           <Button
             type="button"
-            variant="secondary"
+            variant="onDeep"
             disabled={busy}
             onClick={() => void loadMore(lighters.length)}
           >

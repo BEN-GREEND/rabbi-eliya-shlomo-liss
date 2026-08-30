@@ -20,7 +20,13 @@ import { cn } from '@/lib/utils/cn'
  */
 export function Candle({ lit, className }: { lit: boolean; className?: string }) {
   return (
-    <div className={cn('relative', className)}>
+    // Unlit, the whole object sits back a little. It is not dimmed to hide a
+    // flaw — a waiting candle in a dim room simply catches less light, and it
+    // makes the lighting an event rather than a colour change.
+    <div
+      className={cn('relative transition-opacity duration-[1400ms]', className)}
+      style={{ opacity: lit ? 1 : 0.72 }}
+    >
       {/* Glow, behind the glass. */}
       {lit && (
         <div

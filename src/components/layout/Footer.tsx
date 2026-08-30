@@ -5,30 +5,38 @@ import { getSite } from '@/lib/site'
 import { Container } from '@/components/primitives/Container'
 import { COLLECTION_GLYPH, Glyph } from '@/components/primitives/Glyph'
 import { CandleGlyph } from './CandleGlyph'
+import { CandleCount } from './CandleCount'
 import { VisitorCount } from './VisitorCount'
 
 /**
  * The footer.
  *
  * Built to read as the end of the building rather than a strip of links: a
- * brass thread across the top, the name and years set large, the collections
- * listed with their own marks, and the memorial given its own block in wine.
+ * brass thread across the top, the identity set as one tight block — name,
+ * years on a brass rule directly beneath it, then the description — the
+ * collections listed with their own marks, and the memorial given a block of
+ * its own in wine that carries the live count of candles.
  */
 export function Footer() {
   const site = getSite()
 
   return (
-    <footer className="ground-deep paper-grain bg-navy-deep mt-32">
+    <footer className="ground-deep paper-grain bg-navy-deep">
       <div className="via-brass-line/60 h-px bg-gradient-to-l from-transparent to-transparent" />
 
       <Container width="wide" className="py-16 lg:py-24">
         <div className="grid gap-x-12 gap-y-14 lg:grid-cols-[1.4fr_1fr_auto]">
           <div>
             <p className="font-display text-3xl leading-tight">{site.name}</p>
-            <p dir="ltr" className="label-caps numerals text-brass-soft mt-3">
-              1901–1963
+            {/* The years belong to the name: a short brass rule ties them to
+                it rather than leaving them floating underneath. */}
+            <p className="mt-2.5 flex items-center gap-3">
+              <span aria-hidden="true" className="bg-brass-line h-px w-7 shrink-0" />
+              <span dir="ltr" className="label-caps numerals text-brass-soft">
+                1901–1963
+              </span>
             </p>
-            <p className="text-paper/60 mt-5 max-w-sm text-[0.95rem] leading-relaxed">
+            <p className="text-paper/65 mt-6 max-w-[26rem] text-[0.95rem] leading-relaxed">
               {site.description}
             </p>
           </div>
@@ -53,17 +61,18 @@ export function Footer() {
             </ul>
           </nav>
 
-          <div className="lg:min-w-[13rem]">
+          <div className="lg:min-w-[15rem]">
             <p className="label-caps text-brass-soft mb-5">הנצחה</p>
             <Link
               href={MEMORIAL_LINK.href}
-              className="border-brass-soft/25 hover:border-brass-soft group block border p-5 no-underline transition-colors"
+              className="group bg-wine-deep border-brass-line/50 hover:bg-wine hover:border-brass-soft block border p-6 no-underline transition-colors duration-300"
             >
-              <CandleGlyph className="text-brass-soft h-8 w-5" />
-              <span className="font-display group-hover:text-brass-soft mt-3 block text-xl transition-colors">
+              <CandleGlyph className="text-brass-soft group-hover:text-brass-faint h-9 w-6 transition-colors" />
+              <span className="font-display text-paper mt-3 block text-xl">
                 {MEMORIAL_LINK.label}
               </span>
-              <span className="text-paper/55 mt-1 block text-[0.85rem]">להדלקת נר לזכרו</span>
+              <CandleCount />
+              <span className="label-caps text-brass-soft/85 mt-4 block">להדלקת נר לזכרו</span>
             </Link>
 
             <Link

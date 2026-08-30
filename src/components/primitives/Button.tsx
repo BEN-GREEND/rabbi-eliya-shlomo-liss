@@ -3,13 +3,14 @@ import Link from 'next/link'
 import { Glyph } from './Glyph'
 import { cn } from '@/lib/utils/cn'
 
-type Variant = 'primary' | 'secondary' | 'onDeep' | 'memorial'
+type Variant = 'primary' | 'secondary' | 'onDeep' | 'memorial' | 'memorialDeep'
 
 const VARIANTS: Record<Variant, string> = {
   primary: 'btn-primary',
   secondary: 'btn-secondary',
   onDeep: 'btn-on-deep',
   memorial: 'btn-memorial',
+  memorialDeep: 'btn-memorial-deep',
 }
 
 /**

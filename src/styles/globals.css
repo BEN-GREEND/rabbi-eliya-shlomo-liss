@@ -570,6 +570,19 @@
   }
 }
 
+@utility btn-memorial-deep {
+  /* The memorial action inside the dark room: filled wine with a brass edge,
+     so it carries against petrol where an outline would disappear. */
+  background-color: var(--color-wine);
+  color: var(--color-paper);
+  border-color: var(--color-brass-line);
+  box-shadow: var(--shadow-deep);
+  &:hover {
+    background-color: var(--color-wine-deep);
+    border-color: var(--color-brass-soft);
+  }
+}
+
 @utility btn-memorial {
   background-color: transparent;
   color: var(--color-wine);
