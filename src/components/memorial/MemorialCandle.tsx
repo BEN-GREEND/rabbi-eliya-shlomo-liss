@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useId, useState } from 'react'
 import { Candle } from './Candle'
+import { MemorialPortrait, type PortraitPlate } from './MemorialPortrait'
 import { Button } from '@/components/primitives/Button'
 import { cn } from '@/lib/utils/cn'
 
@@ -20,9 +21,10 @@ interface LitResult extends Status {
 /**
  * The memorial candle, and the act of lighting one.
  *
- * Two columns on a wide screen so the flame and the action are on screen
- * together: the candle and the count on the leading side as one unit, the
- * words and the form on the trailing side. On a phone they stack in the same
+ * Two columns on a wide screen so the shelf and the action are on screen
+ * together: on the leading side his photograph with the candle standing in
+ * front of it and the count beneath — one object, not three — and on the
+ * trailing side the words and the form. On a phone they stack in the same
  * order. Nobody should have to scroll to find out what this page asks of them.
  *
  * The count is read once on mount, so the page itself stays static. Lighting
@@ -46,11 +48,14 @@ interface LitResult extends Status {
 export function MemorialCandle({
   memorialTitle,
   siteName,
+  portrait,
   onPublished,
   onBurningChange,
 }: {
   memorialTitle: string
   siteName: string
+  /** Resolved on the server; null until the print exists. */
+  portrait: PortraitPlate | null
   onPublished?: () => void
   onBurningChange?: (burning: boolean) => void
 }) {
@@ -117,13 +122,13 @@ export function MemorialCandle({
 
   return (
     <div className="grid items-center gap-x-16 gap-y-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
-      {/* ---- the flame and the count: one unit ---- */}
+      {/* ---- the shelf: his photograph, the candle in front of it, the count ---- */}
       <div className="relative flex flex-col items-center">
         {/* The light immediately around the candle. The room's own light is a
             layer above this one, in MemorialSection. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute top-[-3rem] left-1/2 -z-10 h-[24rem] w-[24rem] -translate-x-1/2 transition-opacity duration-[1400ms]"
+          className="pointer-events-none absolute top-[6rem] left-1/2 -z-10 h-[24rem] w-[24rem] -translate-x-1/2 transition-opacity duration-[1400ms]"
           style={{
             opacity: burning ? 1 : 0.3,
             background:
@@ -131,11 +136,30 @@ export function MemorialCandle({
           }}
         />
 
-        <div className={cn('w-[9.5rem] sm:w-[11rem]', justLit && 'candle-kindle')}>
+        {portrait && (
+          <div className="w-[12.5rem] sm:w-[15rem]">
+            <MemorialPortrait portrait={portrait} burning={burning} />
+          </div>
+        )}
+
+        {/* With a photograph above it the candle is pulled up over the print's
+            lower edge, so the flame rises in front of him, below his face. A
+            negative margin rather than absolute positioning, so the count
+            still sits correctly and the arrangement holds at every width.
+            Without a photograph the candle simply stands on its own. */}
+        <div
+          className={cn(
+            'relative z-10',
+            portrait
+              ? '-mt-[7.5rem] w-[7rem] sm:-mt-[9rem] sm:w-[8.5rem]'
+              : 'w-[9.5rem] sm:w-[11rem]',
+            justLit && 'candle-kindle',
+          )}
+        >
           <Candle lit={burning} />
         </div>
 
-        <div aria-live="polite" className="mt-8 text-center">
+        <div aria-live="polite" className="mt-6 text-center">
           {status === null ? (
             <p className="label-caps text-paper/45">{failed ? '' : '…'}</p>
           ) : (

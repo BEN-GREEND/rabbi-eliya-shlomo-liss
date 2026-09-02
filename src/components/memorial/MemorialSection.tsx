@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from 'react'
 import { MemorialCandle } from './MemorialCandle'
+import type { PortraitPlate } from './MemorialPortrait'
 import { Lighters } from './Lighters'
 
 /**
@@ -24,9 +25,11 @@ import { Lighters } from './Lighters'
 export function MemorialSection({
   memorialTitle,
   siteName,
+  portrait,
 }: {
   memorialTitle: string
   siteName: string
+  portrait: PortraitPlate | null
 }) {
   const [reloadKey, setReloadKey] = useState(0)
   const [burning, setBurning] = useState(false)
@@ -56,6 +59,7 @@ export function MemorialSection({
       <MemorialCandle
         memorialTitle={memorialTitle}
         siteName={siteName}
+        portrait={portrait}
         onPublished={onPublished}
         onBurningChange={onBurningChange}
       />
